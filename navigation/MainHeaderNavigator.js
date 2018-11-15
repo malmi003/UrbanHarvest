@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
+import Colors from "../constants/Colors";
 
 class LogoTitle extends React.Component {
   render() {
@@ -15,40 +16,53 @@ class LogoTitle extends React.Component {
   }
 }
 
+class HeaderViewToggleBtn extends React.Component {
+  render() {
+    return (
+      <View style={{flex:1, flexDirection:"row", justifyContent:"center"}}>
+        {/* rounded corners still not working */}
+        <TouchableOpacity style={styles.leftRounded}>
+           <Text
+            style={this.props.style1}
+            onPress={this.props.nav1}
+          >Map View
+          </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.rightRounded}>
+          <Text
+            style={this.props.style2}
+            onPress={this.props.nav2}
+          >List View
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+};
+
 export default MainStack = createStackNavigator(
   {
   Map: {
     screen: () => <MapScreen />,
     navigationOptions: ({ navigation }) => ({
-      headerTitle: (
-        <TouchableOpacity>
-           <Text
-            style={styles.activeCenterHeaderButton}
-            onPress={() => navigation.navigate("Map")}
-          >Map View</Text>
-          <Text
-            style={styles.inactiveCenterHeaderButton}
-            onPress={() => navigation.navigate("List")}
-          >List View</Text>
-        </TouchableOpacity>
-      ),
+      headerTitle: <HeaderViewToggleBtn 
+                      style1={styles.inactiveCenterHeaderButton} 
+                      style2={styles.activeCenterHeaderButton}
+                      nav1={() => navigation.navigate("Map")}
+                      nav2={() => navigation.navigate("List")}
+                    />,
     })
   }, 
   List: {
     screen: () => <ListScreen />,
     navigationOptions: ({ navigation }) => ({
-      headerTitle: (
-        <TouchableOpacity>
-          <Text
-            style={styles.inactiveCenterHeaderButton}
-            onPress={() => navigation.navigate("Map")}
-          >Map View</Text>
-          <Text
-            style={styles.activeCenterHeaderButton}
-            onPress={() => navigation.navigate("List")}
-          >List View</Text>
-        </TouchableOpacity>
-      ),
+      headerTitle:
+        <HeaderViewToggleBtn 
+          style1={styles.activeCenterHeaderButton} 
+          style2={styles.inactiveCenterHeaderButton}
+          nav1={() => navigation.navigate("Map")}
+          nav2={() => navigation.navigate("List")}
+        />,
     }),
   }
 },
@@ -57,14 +71,12 @@ export default MainStack = createStackNavigator(
     
 navigationOptions: ({ navigation }) => ({
   headerStyle: {
-    backgroundColor: '#89b369',
+    backgroundColor: Colors.headerGreen,
   },
-  headerTintColor: '#fff',
+  headerTintColor: Colors.white,
   headerTitleStyle: {
     fontWeight: 'bold',
   },
-  // headerTitle: <LogoTitle />,
-  
   headerLeft: (
     <TouchableOpacity>
       <Text
@@ -82,22 +94,34 @@ navigationOptions: ({ navigation }) => ({
 );
 
 const styles = StyleSheet.create({
-  activeCenterHeaderButton: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    color: "green",
+  rightRounded: {
+    borderBottomRightRadius: 14,
+    borderTopRightRadius: 14,
+  },
+  leftRounded: {
+    borderBottomLeftRadius: 14,
+    borderTopLeftRadius: 14,
   },
   inactiveCenterHeaderButton: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    color: "blue",
+    backgroundColor: Colors.lightGreen,
+    padding: 8,
+    color: Colors.darkGray,
+    borderColor:Colors.headerGreen,
+    borderWidth: 2,
+  },
+  activeCenterHeaderButton: {
+    alignItems: 'center',
+    backgroundColor: Colors.lightGray,
+    padding: 8,
+    color: Colors.darkGray,
+    // borderColor:Colors.darkerHeaderGreen,
+    // borderWidth: 2,
   },
   leftHeaderButton: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    color: "blue",
+    backgroundColor: Colors.lightGreen,
+    padding: 8,
+    color: Colors.darkGray,
   },
 });
