@@ -10,11 +10,21 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { MonoText } from '../components/StyledText';
+import { KalamText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
+  // static navigationOptions = {
+  //   header: null,
+  // };
+  static navigationOptions = ({ navigation, navigationOptions }) => {
+    console.log(navigationOptions);
+    // Notice the logs ^
+    // sometimes we call with the default navigationOptions and other times
+    // we call this with the previous navigationOptions that were returned from
+    // this very function
+    return {
+      // title: "string",
+    };
   };
 
   render() {
@@ -38,7 +48,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.getStartedText}>Hello world!?</Text>
 
             <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
+              <KalamText style={styles.codeHighlightText}>screens/HomeScreen.js</KalamText>
             </View>
 
             <Text style={styles.getStartedText}>
@@ -54,10 +64,10 @@ export default class HomeScreen extends React.Component {
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
+          <Text style={styles.tabBarInfoText}>This is a tab bario. You can edit it in:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
+            <KalamText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</KalamText>
           </View>
         </View>
       </View>

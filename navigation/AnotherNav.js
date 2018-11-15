@@ -7,7 +7,7 @@ class LogoTitle extends React.Component {
   render() {
     return (
       <Image
-        source={require('./assets/images/robot-dev.png')}
+        source={require('../assets/images/robot-dev.png')}
         style={{ width: 30, height: 30 }}
       />
     );
@@ -36,7 +36,7 @@ const MainStack = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
-    /* The header config from HomeScreen is now here */
+    
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#f4511e',
@@ -45,6 +45,13 @@ const MainStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      headerTitle: <LogoTitle />,
+    headerLeft: (
+      <Text>yo</Text>
+        ),
+      headerRight: (
+        <Text>what</Text>
+      ),
     },
   }
 );
