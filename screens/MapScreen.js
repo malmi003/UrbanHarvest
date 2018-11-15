@@ -12,10 +12,11 @@ import { WebBrowser } from 'expo';
 
 import { KalamText } from '../components/StyledText';
 
-export default class HomeScreen extends React.Component {
+export default class MapScreen extends React.Component {
   // static navigationOptions = {
-  //   header: null,
+  //   title: 'MapScreen',
   // };
+
   static navigationOptions = ({ navigation, navigationOptions }) => {
     console.log(navigationOptions);
     // Notice the logs ^
@@ -35,7 +36,7 @@ export default class HomeScreen extends React.Component {
             <Image
               source={
                 __DEV__
-                  ? require('../assets/images/robot-dev.png')
+                  ? require('../assets/images/leafLogo.png')
                   : require('../assets/images/robot-prod.png')
               }
               style={styles.welcomeImage}
@@ -47,8 +48,8 @@ export default class HomeScreen extends React.Component {
 
             <Text style={styles.getStartedText}>Hello world!?</Text>
 
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <KalamText style={styles.codeHighlightText}>screens/HomeScreen.js</KalamText>
+            <View style={[styles.codeHighlightContainer, styles.mapScreenFilename]}>
+              <KalamText style={styles.codeHighlightText}>screens/MapScreen.js</KalamText>
             </View>
 
             <Text style={styles.getStartedText}>
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  homeScreenFilename: {
+  mapScreenFilename: {
     marginVertical: 7,
   },
   codeHighlightText: {
