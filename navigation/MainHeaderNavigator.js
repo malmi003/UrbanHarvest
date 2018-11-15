@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, Text, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
@@ -15,30 +15,22 @@ class LogoTitle extends React.Component {
   }
 }
 
-class ToggleButton extends React.Component {
-  render() {    
-    return (
-      <Button
-        title={this.props.title}
-        // onPress={() => {this.props.onPressDestination}}
-        color="blue"
-        onPress={()=>this.props.onPress1}
-      />
-    );
-};
-};
-
 export default MainStack = createStackNavigator(
   {
   Map: {
     screen: () => <MapScreen />,
     navigationOptions: ({ navigation }) => ({
       headerTitle: (
-        <Button
-        title="Switch to List View"
-        onPress={() => navigation.navigate("List")}
-        color="blue"
-      />
+        <TouchableOpacity>
+           <Text
+            style={styles.activeCenterHeaderButton}
+            onPress={() => navigation.navigate("Map")}
+          >Map View</Text>
+          <Text
+            style={styles.inactiveCenterHeaderButton}
+            onPress={() => navigation.navigate("List")}
+          >List View</Text>
+        </TouchableOpacity>
       ),
     })
   }, 
@@ -46,11 +38,16 @@ export default MainStack = createStackNavigator(
     screen: () => <ListScreen />,
     navigationOptions: ({ navigation }) => ({
       headerTitle: (
-        <Button
-        title="Switch to Map View"
-        onPress={() => navigation.navigate("Map")}
-        color="blue"
-      />
+        <TouchableOpacity>
+          <Text
+            style={styles.inactiveCenterHeaderButton}
+            onPress={() => navigation.navigate("Map")}
+          >Map View</Text>
+          <Text
+            style={styles.activeCenterHeaderButton}
+            onPress={() => navigation.navigate("List")}
+          >List View</Text>
+        </TouchableOpacity>
       ),
     }),
   }
@@ -69,12 +66,13 @@ navigationOptions: ({ navigation }) => ({
   // headerTitle: <LogoTitle />,
   
   headerLeft: (
-    <Button
-      // onPress={() => navigation.navigate('MyModal')}
-      onPress={()=> console.log("working")}
-      title="Infio"
-      color="#fff"
-    />
+    <TouchableOpacity>
+      <Text
+            style={styles.leftHeaderButton}
+            onPress={() => alert("info!")}
+          >Info
+      </Text>
+    </TouchableOpacity>
       ),
     headerRight: (
       <Text>what</Text>
@@ -82,3 +80,24 @@ navigationOptions: ({ navigation }) => ({
 }),
 }
 );
+
+const styles = StyleSheet.create({
+  activeCenterHeaderButton: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    color: "green",
+  },
+  inactiveCenterHeaderButton: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    color: "blue",
+  },
+  leftHeaderButton: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    color: "blue",
+  },
+});
