@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, Image } from 'react-native';
+import { View, Button, Text, Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
@@ -15,19 +15,50 @@ class LogoTitle extends React.Component {
   }
 }
 
+class ToggleButton extends React.Component {
+  render() {    
+    return (
+      <Button
+        title={this.props.title}
+        // onPress={() => {this.props.onPressDestination}}
+        color="blue"
+        onPress={()=>this.props.onPress1}
+      />
+    );
+};
+};
+
 export default MainStack = createStackNavigator(
   {
   Map: {
     screen: () => <MapScreen />,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: (
+        <Button
+        title="Switch to List View"
+        onPress={() => navigation.navigate("List")}
+        color="blue"
+      />
+      ),
+    })
   }, 
   List: {
-    screen: () => <ListScreen />
+    screen: () => <ListScreen />,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: (
+        <Button
+        title="Switch to Map View"
+        onPress={() => navigation.navigate("Map")}
+        color="blue"
+      />
+      ),
+    }),
   }
 },
 {
   initialRouteName: 'Map',
     
-navigationOptions: {
+navigationOptions: ({ navigation }) => ({
   headerStyle: {
     backgroundColor: '#89b369',
   },
@@ -35,7 +66,8 @@ navigationOptions: {
   headerTitleStyle: {
     fontWeight: 'bold',
   },
-  headerTitle: <LogoTitle />,
+  // headerTitle: <LogoTitle />,
+  
   headerLeft: (
     <Button
       // onPress={() => navigation.navigate('MyModal')}
@@ -47,6 +79,6 @@ navigationOptions: {
     headerRight: (
       <Text>what</Text>
     ),
-  },
+}),
 }
 );
