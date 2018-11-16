@@ -7,10 +7,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native';
 import { MapView } from 'expo';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
+import { DrawerActions } from 'react-navigation-drawer';
+
 
 const { Marker } = MapView;
 
@@ -61,6 +64,7 @@ class MapScreen extends React.Component {
             coordinate={this.state.marker.latlng}
             title={this.state.marker.title}
             description={this.state.marker.description}
+            image={require("../assets/images/broccoli.png")}
           />
         </MapView>
 
@@ -72,6 +76,13 @@ class MapScreen extends React.Component {
             >Produce Food
               </Text>
           </TouchableOpacity>
+          <Button
+            // onPress={() => {this.props.navigation.dispatch(DrawerActions.openDrawer())
+              onPress={() => {this.props.navigation.openDrawer()
+
+            console.log("working")}}
+            title="Go to notifications"
+          />
         </View>
       </View>
     );

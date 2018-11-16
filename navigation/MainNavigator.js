@@ -1,11 +1,17 @@
-import React from 'react';
-import { Platform, View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
-import { createStackNavigator, StackNavigator } from 'react-navigation';
+import React, { Component } from 'react';
+import { Platform, Text, TouchableHighlight, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { createStackNavigator, createDrawerNavigator, createTabNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
 import ProduceModalScreen from "../screens/ProduceModalScreen";
+import { Button } from 'react-native-elements';
+import { DrawerActions } from 'react-navigation-drawer';
+import { NavigationActions } from 'react-navigation';
+
 
 class LogoTitle extends React.Component {
   render() {
@@ -17,6 +23,37 @@ class LogoTitle extends React.Component {
     );
   }
 }
+const navigateAction = NavigationActions.navigate({
+  routeName: 'LeftDrawer',
+
+  params: {},
+
+  action: NavigationActions.navigate({ routeName: 'LeftDrawerNavigator' }),
+});
+class DrawerButton extends React.Component {
+  render() {
+    return (
+      <TouchableOpacity
+        // onPress={() => this.props.navigation.dispatch(navigateAction)}
+        onPress={() => {this.props.navigation.openDrawer()}}
+
+        >
+        <Icon
+          name={
+            Platform.OS === 'ios'
+              ? 'ios-menu'
+              : 'md-menu'
+          }
+          size={40}
+          style={{ paddingLeft: 20 }}
+          color={Colors.white}
+        />
+      </TouchableOpacity >
+    )
+  }
+}
+
+
 
 class HeaderViewToggleBtn extends React.Component {
   render() {
@@ -54,6 +91,7 @@ const MainStack = createStackNavigator(
             nav1={() => navigation.navigate("Map")}
             nav2={() => navigation.navigate("List")}
           />,
+
       })
     },
     List: {
@@ -67,11 +105,14 @@ const MainStack = createStackNavigator(
             nav2={() => navigation.navigate("List")}
           />,
       }),
-    }
+    },
+    // LeftDrawer: {
+    //   screen: LeftDrawerNavigator
+    // }
   },
   {
     initialRouteName: 'Map',
-    navigationOptions: ({
+    navigationOptions: ({ navigation }) => ({
       headerStyle: {
         backgroundColor: Colors.headerGreen,
       },
@@ -79,45 +120,34 @@ const MainStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerLeft: ({ focused }) => (
-        // removed "focus" part of name statement - should add back in
-        <Icon
-          focused={focused}
-          name={
-            Platform.OS === 'ios'
-              ? 'ios-menu'
-              : 'md-menu'
-          }
-          size={40}
-          style={{ paddingLeft: 20 }}
-          color={Colors.white}
-        />
-      ),
-      // headerRight goes here
+      headerRight: <DrawerButton navigation={navigation} />,
+      headerLeft: () => (
+        <DrawerButton navigation={navigation} />
+      )
+      // headerRight: () => (
+      // <DrawerButton navigation={this.props.navigation} />
+      // ),
     }),
   }
 );
+const LeftDrawerNavigator = createDrawerNavigator(
+  {
+    Main: { screen: MainStack },
+    // Settings: { screen: SettingsScreen },
 
-// modal
-// class ProduceModalScreen extends React.Component {
-//   render() {
-//     return (
-//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-//       <Button
-//         onPress={() => this.props.navigation.goBack()}
-//         title="Dismiss"
-//       />
-//     </View>
-//     );
-//   };
-// };
-// end modal
+  },
+  {
+    drawerPosition: "left",
+    initialRouteName: "Main",
+    drawerBackgroundColor: "yellow",
+    drawerWidth: 300,
+  }
+);
 
 export default RootStack = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
+      screen: LeftDrawerNavigator,
     },
     ProduceModal: {
       screen: ProduceModalScreen,
@@ -128,6 +158,13 @@ export default RootStack = createStackNavigator(
     headerMode: 'none',
   }
 )
+//  RootStack = createStackNavigator(
+//   {
+//     Main: {
+//       screen: AnotherStack
+//     },
+//   }
+// )
 
 
 const styles = StyleSheet.create({
