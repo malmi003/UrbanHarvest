@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { Platform, View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { createStackNavigator, StackNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
 import Colors from "../constants/Colors";
+import Icon from "../components/Icon";
+import ProduceModalScreen from "../screens/ProduceModalScreen";
 
 class LogoTitle extends React.Component {
   render() {
@@ -40,17 +42,18 @@ class HeaderViewToggleBtn extends React.Component {
   };
 };
 
-export default MainStack = createStackNavigator(
+const MainStack = createStackNavigator(
   {
   Map: {
     screen: () => <MapScreen />,
     navigationOptions: ({ navigation }) => ({
-      headerTitle: <HeaderViewToggleBtn 
-                      style1={styles.inactiveCenterHeaderButton} 
-                      style2={styles.activeCenterHeaderButton}
-                      nav1={() => navigation.navigate("Map")}
-                      nav2={() => navigation.navigate("List")}
-                    />,
+      headerTitle: 
+      <HeaderViewToggleBtn 
+        style1={styles.inactiveCenterHeaderButton} 
+        style2={styles.activeCenterHeaderButton}
+        nav1={() => navigation.navigate("Map")}
+        nav2={() => navigation.navigate("List")}
+      />,
     })
   }, 
   List: {
@@ -67,9 +70,8 @@ export default MainStack = createStackNavigator(
   }
 },
 {
-  initialRouteName: 'Map',
-    
-navigationOptions: ({ navigation }) => ({
+initialRouteName: 'Map',    
+navigationOptions: ({
   headerStyle: {
     backgroundColor: Colors.headerGreen,
   },
@@ -77,21 +79,56 @@ navigationOptions: ({ navigation }) => ({
   headerTitleStyle: {
     fontWeight: 'bold',
   },
-  headerLeft: (
-    <TouchableOpacity>
-      <Text
-            style={styles.leftHeaderButton}
-            onPress={() => alert("info!")}
-          >Info
-      </Text>
-    </TouchableOpacity>
+  headerLeft: ({ focused }) => (
+    // removed "focus" part of name statement - should add back in
+    <Icon
+      focused={focused}
+      name={
+          Platform.OS === 'ios'
+          ? 'ios-menu'
+          : 'md-menu'
+        }
+      size={40}
+      style={{paddingLeft: 20}}
+      color={Colors.white}
+    />
       ),
-    headerRight: (
-      <Text>what</Text>
-    ),
+      // headerRight goes here
 }),
 }
 );
+
+// modal
+// class ProduceModalScreen extends React.Component {
+//   render() {
+//     return (
+//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+//       <Text style={{ fontSize: 30 }}>This is a modal!</Text>
+//       <Button
+//         onPress={() => this.props.navigation.goBack()}
+//         title="Dismiss"
+//       />
+//     </View>
+//     );
+//   };
+// };
+// end modal
+
+export default RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: MainStack,
+    },
+    ProduceModal: {
+      screen: ProduceModalScreen,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+)
+
 
 const styles = StyleSheet.create({
   rightRounded: {
@@ -109,14 +146,16 @@ const styles = StyleSheet.create({
     color: Colors.darkGray,
     borderColor:Colors.headerGreen,
     borderWidth: 2,
+    fontSize:15,
   },
   activeCenterHeaderButton: {
     alignItems: 'center',
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.headerGreen,
     padding: 8,
-    color: Colors.darkGray,
-    // borderColor:Colors.darkerHeaderGreen,
-    // borderWidth: 2,
+    color: Colors.white,
+    borderColor:Colors.lightGreen,
+    borderWidth: 2,
+    fontSize:15,
   },
   leftHeaderButton: {
     alignItems: 'center',
