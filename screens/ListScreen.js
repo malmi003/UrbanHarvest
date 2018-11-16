@@ -24,7 +24,7 @@ class ListScreen extends React.Component {
         <Text 
           style={styles.tabBarInfoText}
           onPress={() => this.props.navigation.navigate("ProduceModal")}
-          >Produce Foods
+          >Produce Food
         </Text>
         </TouchableOpacity>
       </View>

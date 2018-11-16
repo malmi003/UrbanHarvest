@@ -11,19 +11,30 @@ import {
 import { WebBrowser } from 'expo';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
+import MapView from 'react-native-maps';
+
 
 class MapScreen extends React.Component { 
   
   render() {
+    let region = {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    };
     return (
       <View style={styles.container}>
-
+      <MapView
+        style={{ flex: 1 }}
+        initialRegion={region}
+      />
         <View style={styles.tabBarInfoContainer}>
             <TouchableOpacity>
               <Text 
                 style={styles.tabBarInfoText}
                 onPress={() => this.props.navigation.navigate("ProduceModal")}
-                >Produce Foods
+                >Produce Food
               </Text>
               </TouchableOpacity>
             </View>
@@ -53,16 +64,6 @@ class MapScreen extends React.Component {
       );
     }
   }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
