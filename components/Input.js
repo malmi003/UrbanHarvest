@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { View, Text } from "react-native";
-import { FormInput, FormValidationMessage, FormLabel} from "react-native-elements";
+import { FormInput, FormValidationMessage, FormLabel } from "react-native-elements";
 
 class Input extends PureComponent {
     // state = {  };
@@ -11,16 +11,16 @@ class Input extends PureComponent {
         this.props.onTouch(this.props.name);
     }
     render() {
-        const { label, error, placeholder, type, ...rest} = this.props;
+        const { label, error, placeholder, type, ...rest } = this.props;
         return (
             <View>
                 <FormLabel>{label}</FormLabel>
-                <FormInput 
+                <FormInput
                     onChangeText={this._handleChange}
                     onBlur={this._handleTouch}
-                    placeholder={placeholder} 
+                    placeholder={placeholder}
                     type={type}
-                    {...rest} 
+                    {...rest}
                 />
                 {error && <FormValidationMessage>{error}</FormValidationMessage>}
             </View>

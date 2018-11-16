@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Platform, TouchableOpacity, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Platform, TouchableOpacity, Text, View } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
@@ -14,21 +14,21 @@ class ListScreen extends React.Component {
     return (
       <View style={styles.container}>
 
-      <ScrollView style={styles.container}>
-        {/* Go ahead and delete ExpoLinksView and replace it with your
+        <ScrollView style={styles.container}>
+          {/* Go ahead and delete ExpoLinksView and replace it with your
            * content, we just wanted to provide you with some helpful links */}
-        <ExpoLinksView />
-      </ScrollView>
-      <View style={styles.tabBarInfoContainer}>
-      <TouchableOpacity>
-        <Text 
-          style={styles.tabBarInfoText}
-          onPress={() => this.props.navigation.navigate("ProduceModal")}
-          >Produce Food
+          <ExpoLinksView />
+        </ScrollView>
+        <View style={styles.tabBarInfoContainer}>
+          <TouchableOpacity>
+            <Text
+              style={styles.tabBarInfoText}
+              onPress={() => this.props.navigation.navigate("ProduceModal")}
+            >Produce Food
         </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
-</View>
     );
   }
 }

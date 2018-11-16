@@ -29,12 +29,14 @@ class ProduceModalScreen extends React.Component {
         validationSchema={Yup.object().shape({
           description: Yup.string(),
           email: Yup.string().email().required(),
+          category: Yup.string(),
+          location: Yup.string().required(),
+          contact: Yup.string().required(),
         })}
         render= {({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
         <React.Fragment>
           <Input 
             label="Description"
-            type="text"
             placeholder="add a brief description here"
             value={values.description}
             onChange={setFieldValue}
@@ -51,9 +53,33 @@ class ProduceModalScreen extends React.Component {
             name="email"
             error={touched.email && errors.email}
           />
-          {/* <Checkbox name="roles" value="admin" />
-          <Checkbox name="roles" value="customer" /> */}
-          
+          <Input 
+            label="Category"
+            placeholder="enter food category (produce, boxed, canned, etc)"
+            value={values.category}
+            onChange={setFieldValue}
+            onTouch={setFieldTouched}
+            name="description"
+            error={touched.category && errors.category}
+          />
+          <Input 
+            label="location"
+            placeholder="enter address"
+            value={values.category}
+            onChange={setFieldValue}
+            onTouch={setFieldTouched}
+            name="location"
+            error={touched.location && errors.location}
+          />
+          <Input 
+            label="Contact Info"
+            placeholder="enter your preferred contact information"
+            value={values.contact}
+            onChange={setFieldValue}
+            onTouch={setFieldTouched}
+            name="contact"
+            error={touched.contact && errors.contact}
+          />
           <Button 
             buttonStyle={styles.submitButton} 
             title="Add to Map" 

@@ -21,16 +21,16 @@ class LogoTitle extends React.Component {
 class HeaderViewToggleBtn extends React.Component {
   render() {
     return (
-      <View style={{flex:1, flexDirection:"row", justifyContent:"center"}}>
+      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
         {/* rounded corners still not working */}
         <TouchableOpacity style={styles.leftRounded}>
-           <Text
+          <Text
             style={this.props.style1}
             onPress={this.props.nav1}
           >Map View
           </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.rightRounded}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.rightRounded}>
           <Text
             style={this.props.style2}
             onPress={this.props.nav2}
@@ -44,58 +44,58 @@ class HeaderViewToggleBtn extends React.Component {
 
 const MainStack = createStackNavigator(
   {
-  Map: {
-    screen: () => <MapScreen />,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: 
-      <HeaderViewToggleBtn 
-        style1={styles.inactiveCenterHeaderButton} 
-        style2={styles.activeCenterHeaderButton}
-        nav1={() => navigation.navigate("Map")}
-        nav2={() => navigation.navigate("List")}
-      />,
-    })
-  }, 
-  List: {
-    screen: () => <ListScreen />,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle:
-        <HeaderViewToggleBtn 
-          style1={styles.activeCenterHeaderButton} 
-          style2={styles.inactiveCenterHeaderButton}
-          nav1={() => navigation.navigate("Map")}
-          nav2={() => navigation.navigate("List")}
-        />,
-    }),
-  }
-},
-{
-initialRouteName: 'Map',    
-navigationOptions: ({
-  headerStyle: {
-    backgroundColor: Colors.headerGreen,
+    Map: {
+      screen: () => <MapScreen />,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle:
+          <HeaderViewToggleBtn
+            style1={styles.inactiveCenterHeaderButton}
+            style2={styles.activeCenterHeaderButton}
+            nav1={() => navigation.navigate("Map")}
+            nav2={() => navigation.navigate("List")}
+          />,
+      })
+    },
+    List: {
+      screen: () => <ListScreen />,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle:
+          <HeaderViewToggleBtn
+            style1={styles.activeCenterHeaderButton}
+            style2={styles.inactiveCenterHeaderButton}
+            nav1={() => navigation.navigate("Map")}
+            nav2={() => navigation.navigate("List")}
+          />,
+      }),
+    }
   },
-  headerTintColor: Colors.white,
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
-  headerLeft: ({ focused }) => (
-    // removed "focus" part of name statement - should add back in
-    <Icon
-      focused={focused}
-      name={
-          Platform.OS === 'ios'
-          ? 'ios-menu'
-          : 'md-menu'
-        }
-      size={40}
-      style={{paddingLeft: 20}}
-      color={Colors.white}
-    />
+  {
+    initialRouteName: 'Map',
+    navigationOptions: ({
+      headerStyle: {
+        backgroundColor: Colors.headerGreen,
+      },
+      headerTintColor: Colors.white,
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerLeft: ({ focused }) => (
+        // removed "focus" part of name statement - should add back in
+        <Icon
+          focused={focused}
+          name={
+            Platform.OS === 'ios'
+              ? 'ios-menu'
+              : 'md-menu'
+          }
+          size={40}
+          style={{ paddingLeft: 20 }}
+          color={Colors.white}
+        />
       ),
       // headerRight goes here
-}),
-}
+    }),
+  }
 );
 
 // modal
@@ -144,18 +144,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGreen,
     padding: 8,
     color: Colors.darkGray,
-    borderColor:Colors.headerGreen,
+    borderColor: Colors.headerGreen,
     borderWidth: 2,
-    fontSize:15,
+    fontSize: 15,
   },
   activeCenterHeaderButton: {
     alignItems: 'center',
     backgroundColor: Colors.headerGreen,
     padding: 8,
     color: Colors.white,
-    borderColor:Colors.lightGreen,
+    borderColor: Colors.lightGreen,
     borderWidth: 2,
-    fontSize:15,
+    fontSize: 15,
   },
   leftHeaderButton: {
     alignItems: 'center',
