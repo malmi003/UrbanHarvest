@@ -76,13 +76,6 @@ class MapScreen extends React.Component {
             >Produce Food
               </Text>
           </TouchableOpacity>
-          <Button
-            // onPress={() => {this.props.navigation.dispatch(DrawerActions.openDrawer())
-              onPress={() => {this.props.navigation.openDrawer()
-
-            console.log("working")}}
-            title="Go to notifications"
-          />
         </View>
       </View>
     );

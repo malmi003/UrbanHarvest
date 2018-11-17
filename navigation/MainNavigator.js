@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, Text, TouchableHighlight, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { createStackNavigator, createDrawerNavigator, createTabNavigator } from 'react-navigation';
+import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
-import SettingsScreen from '../screens/SettingsScreen';
 
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
 import ProduceModalScreen from "../screens/ProduceModalScreen";
-import { Button } from 'react-native-elements';
-import { DrawerActions } from 'react-navigation-drawer';
-import { NavigationActions } from 'react-navigation';
 
 
 class LogoTitle extends React.Component {
@@ -23,20 +19,12 @@ class LogoTitle extends React.Component {
     );
   }
 }
-const navigateAction = NavigationActions.navigate({
-  routeName: 'LeftDrawer',
 
-  params: {},
-
-  action: NavigationActions.navigate({ routeName: 'LeftDrawerNavigator' }),
-});
 class DrawerButton extends React.Component {
   render() {
     return (
       <TouchableOpacity
-        // onPress={() => this.props.navigation.dispatch(navigateAction)}
         onPress={() => {this.props.navigation.openDrawer()}}
-
         >
         <Icon
           name={
@@ -52,8 +40,6 @@ class DrawerButton extends React.Component {
     )
   }
 }
-
-
 
 class HeaderViewToggleBtn extends React.Component {
   render() {
@@ -79,6 +65,17 @@ class HeaderViewToggleBtn extends React.Component {
   };
 };
 
+const CustomDrawerContentComponent = (props) => (
+  <ScrollView>
+    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <DrawerItems {...props} />
+      <Text style={{paddingLeft:22}}>place your various nav links here!</Text>
+    </SafeAreaView>
+  </ScrollView>
+);
+
+
+// STACK AND NAVIGATION START BELOW HERE
 const MainStack = createStackNavigator(
   {
     Map: {
@@ -106,9 +103,6 @@ const MainStack = createStackNavigator(
           />,
       }),
     },
-    // LeftDrawer: {
-    //   screen: LeftDrawerNavigator
-    // }
   },
   {
     initialRouteName: 'Map',
@@ -120,7 +114,6 @@ const MainStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerRight: <DrawerButton navigation={navigation} />,
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
       )
@@ -133,14 +126,13 @@ const MainStack = createStackNavigator(
 const LeftDrawerNavigator = createDrawerNavigator(
   {
     Main: { screen: MainStack },
-    // Settings: { screen: SettingsScreen },
-
   },
   {
     drawerPosition: "left",
     initialRouteName: "Main",
-    drawerBackgroundColor: "yellow",
+    drawerBackgroundColor: Colors.headerGreen,
     drawerWidth: 300,
+    contentComponent: CustomDrawerContentComponent,
   }
 );
 
@@ -158,16 +150,11 @@ export default RootStack = createStackNavigator(
     headerMode: 'none',
   }
 )
-//  RootStack = createStackNavigator(
-//   {
-//     Main: {
-//       screen: AnotherStack
-//     },
-//   }
-// )
-
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   rightRounded: {
     borderBottomRightRadius: 14,
     borderTopRightRadius: 14,
