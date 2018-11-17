@@ -76,7 +76,7 @@ const CustomDrawerContentComponent = (props) => (
 
 
 // STACK AND NAVIGATION START BELOW HERE
-const MainStack = createStackNavigator(
+const headerToggleStack = createStackNavigator(
   {
     Map: {
       screen: () => <MapScreen />,
@@ -125,11 +125,12 @@ const MainStack = createStackNavigator(
 );
 const LeftDrawerNavigator = createDrawerNavigator(
   {
-    Main: { screen: MainStack },
+    HeaderToggle: { screen: headerToggleStack },
+    // place the rest of the stacks here!
   },
   {
     drawerPosition: "left",
-    initialRouteName: "Main",
+    initialRouteName: "HeaderToggle",
     drawerBackgroundColor: Colors.headerGreen,
     drawerWidth: 300,
     contentComponent: CustomDrawerContentComponent,

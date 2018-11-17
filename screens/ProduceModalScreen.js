@@ -15,10 +15,13 @@ import Input from "../components/Input";
 import { Checkbox, Button } from "react-native-elements";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { addItem } from "../src/services/demo";
 
 class ProduceModalScreen extends React.Component {
   _handleSubmit = values => {
-    Alert.alert(JSON.stringify(values))
+    addItem(values);
+    Alert.alert(JSON.stringify(values), "saved?");
+
   }
   render() {
     return (

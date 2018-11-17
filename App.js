@@ -1,11 +1,7 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
-// import {StackNavigator, createStackNavigator} from "react-navigation";
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
-import Footer from "./components/Footer";
-import Colors from "./constants/Colors";
-  
 
 export default class App extends React.Component {
   state = {
