@@ -126,7 +126,7 @@ const headerToggleStack = createStackNavigator(
     }),
   }
 );
-const LeftDrawerNavigator = createDrawerNavigator(
+export default LeftDrawerNavigator = createDrawerNavigator(
   {
     HeaderToggle: { screen: headerToggleStack },
     // place the rest of the stacks here!
@@ -139,35 +139,35 @@ const LeftDrawerNavigator = createDrawerNavigator(
     contentComponent: CustomDrawerContentComponent,
   }
 );
-const authNavigator = createStackNavigator(
- { 
-   Login: {
-    screen: LoginScreen,
-  },
-  SignUp: {
-    screen: SignUpScreen,
-  },
-  ForgotPassword: {
-    screen: ForgotPasswordScreen,
-  },
-}
-)
-export default RootStack = createSwitchNavigator(
-  {
-    AuthLoading: {
-      screen: AuthLoadingScreen,
-    },
-    Auth: {
-      screen: authNavigator,
-    },
-    Main: {
-      screen: LeftDrawerNavigator,
-    },
-  },
-  {
-    initialRouteName: 'AuthLoading',
-  }
-)
+// const authNavigator = createStackNavigator(
+//  { 
+//    Login: {
+//     screen: LoginScreen,
+//   },
+//   SignUp: {
+//     screen: SignUpScreen,
+//   },
+//   ForgotPassword: {
+//     screen: ForgotPasswordScreen,
+//   },
+// }
+// )
+// export default RootStack = createSwitchNavigator(
+//   {
+//     AuthLoading: {
+//       screen: AuthLoadingScreen,
+//     },
+//     Auth: {
+//       screen: authNavigator,
+//     },
+//     Main: {
+//       screen: LeftDrawerNavigator,
+//     },
+//   },
+//   {
+//     initialRouteName: 'AuthLoading',
+//   }
+// )
 
 const styles = StyleSheet.create({
   container: {

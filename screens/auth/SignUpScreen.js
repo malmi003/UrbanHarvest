@@ -1,22 +1,83 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { StyleSheet, View, Text, TextInput, Button, Alert } from 'react-native';
+import { NavigationActions } from 'react-navigation';
+import * as firebase from 'firebase';
 
-import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+export default class SignUpScreen extends React.Component {
 
-export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = { 
+            email: "",
+            password: "",
+            passwordConfirm: "",
+        };
+    }
+
+    onSignUpPress = () => {
+        if (this.state.password !== this.state.passwordConfirm) {
+            Alert.alert("Passwords do not match");
+            return;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => { }, (error) => { Alert.alert(error.message); });
+    }
+
+    onBackToLoginPress = () => {
+        // const navActions = NavigationActions.reset({
+        //     index: 0,
+        //     actions: [NavigationActions.navigate({routeName: "Login"})]
+        // });
+        // this.props.navigation.dispatch(navActions);
+        this.props.navigation.navigate("Login");
     }
 
     render() {
         return (
-            <Text style={{ paddingTop: 20 }}>Sign Up</Text >
-        )
+            <View style={{paddingTop:50, alignItems:"center"}}>
+
+                <Text>Signup</Text>
+
+                <TextInput style={{width: 200, height: 40, borderWidth: 1}}
+                    value={this.state.email}
+                    onChangeText={(text) => { this.setState({email: text}) }}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+
+                <View style={{paddingTop:10}} />
+
+                <TextInput style={{width: 200, height: 40, borderWidth: 1}}
+                    value={this.state.password}
+                    onChangeText={(text) => { this.setState({password: text}) }}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+
+                <View style={{paddingTop:10}} />
+
+                <TextInput style={{width: 200, height: 40, borderWidth: 1}}
+                    value={this.state.passwordConfirm}
+                    onChangeText={(text) => { this.setState({passwordConfirm: text}) }}
+                    placeholder="Password (confirm)"
+                    secureTextEntry={true}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+
+                <Button title="Signup" onPress={this.onSignUpPress} />
+
+                <Button title="Back to Login" onPress={this.onBackToLoginPress} />
+            </View>
+        );
     }
 }
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 15,
-      },
+
 });

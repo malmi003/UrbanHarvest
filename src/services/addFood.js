@@ -1,6 +1,6 @@
 import { db } from '../config/db';
 
-export const addFood = (item) => {
+export const addFood = item => {
     db.ref('/items').push({
         newFood: item
     }, function (error) {
@@ -10,4 +10,4 @@ export const addFood = (item) => {
             console.log("data saved!")
         };
     });
-}
+};
