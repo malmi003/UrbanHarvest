@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, createSwitchNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
-import LoginScreen from "../screens/auth/LoginScreen";
-import SignUpScreen from "../screens/auth/SignUpScreen";
-import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
-import AuthLoadingScreen from "../screens/auth/AuthLoadingScreen";
+import * as firebase from 'firebase';
 
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
@@ -119,10 +116,9 @@ const headerToggleStack = createStackNavigator(
       },
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
-      )
-      // headerRight: () => (
-      // <DrawerButton navigation={this.props.navigation} />
-      // ),
+      ),
+      headerRight: <Button title="Sign out" onPress={()=> firebase.auth().signOut()}/>
+      
     }),
   }
 );
@@ -139,35 +135,6 @@ export default LeftDrawerNavigator = createDrawerNavigator(
     contentComponent: CustomDrawerContentComponent,
   }
 );
-// const authNavigator = createStackNavigator(
-//  { 
-//    Login: {
-//     screen: LoginScreen,
-//   },
-//   SignUp: {
-//     screen: SignUpScreen,
-//   },
-//   ForgotPassword: {
-//     screen: ForgotPasswordScreen,
-//   },
-// }
-// )
-// export default RootStack = createSwitchNavigator(
-//   {
-//     AuthLoading: {
-//       screen: AuthLoadingScreen,
-//     },
-//     Auth: {
-//       screen: authNavigator,
-//     },
-//     Main: {
-//       screen: LeftDrawerNavigator,
-//     },
-//   },
-//   {
-//     initialRouteName: 'AuthLoading',
-//   }
-// )
 
 const styles = StyleSheet.create({
   container: {
