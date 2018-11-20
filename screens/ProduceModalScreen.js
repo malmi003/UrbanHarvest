@@ -56,7 +56,6 @@ class ProduceModalScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View >
           <ScrollView>
             <Modal
               animationType="slide"
@@ -161,7 +160,7 @@ class ProduceModalScreen extends React.Component {
                       error={touched.contact && errors.contact}
                     />
                     <Button
-                      buttonStyle={Styles.submitButton}
+                      buttonStyle={Styles.smallGapSubmitButton}
                       title="Add to Map"
                       onPress={handleSubmit}
                       disabled={!isValid || isSubmitting}
@@ -177,7 +176,6 @@ class ProduceModalScreen extends React.Component {
               />
             </Modal>
           </ScrollView>
-        </View>
 
         {/* Produce Food Button that opens modal */}
         <View style={Styles.tabBarInfoContainer}>

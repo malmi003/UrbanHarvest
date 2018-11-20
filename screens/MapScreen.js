@@ -16,8 +16,8 @@ import { MapView } from 'expo';
 import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
-import { pullFoods } from "../src/services/pullFoods";
 import ProduceModalScreen from "./ProduceModalScreen";
+import MyButton from "../components/Button";
 
 const { Marker } = MapView;
 const { width, height } = Dimensions.get('window');
@@ -38,11 +38,9 @@ class MapScreen extends React.Component {
     };
   };
   // figure out the bounds of the screen (upper&lower lat& long)
-
   //map through the data to figure out if the given lat&lngs are within that range
   // pull all the pins from db, filter through them, create markers for each of those...
   pullFoods = () => {
-
     db.ref("currentFood").on("value", snapshot => {
       // grab the coords & hover data from each item in newFoods list
       let markerArray = [];
@@ -51,8 +49,6 @@ class MapScreen extends React.Component {
         let lng = parseFloat(item.val().newFood.lng);
         let name = item.val().newFood.name;
         let description = item.val().newFood.description;
-        let category = item.val().newFood.category;
-        let contact = item.val().newFood.contact;
         let itemKey = item.key;
 
         // push each one into the marker array
@@ -63,12 +59,9 @@ class MapScreen extends React.Component {
           },
           title: name,
           description: description,
-          category: category,
-          contact: contact,
           key: itemKey,
         })
       });
-      // update the state to match the current markerArray
       this.setState({
         markerArray: markerArray,
       });
@@ -131,9 +124,19 @@ class MapScreen extends React.Component {
             />
           ))}
         </MapView>
+        
         <Button
           title="zero on current location"
           onPress={() => { this.getAndSetCurrentLocation() }}
+        />
+        <MyButton 
+          onPress={()=> console.log("hello")}
+          iconName={"menu"}
+          // iconSize={}
+          // iconStyle={}
+          // iconColor={}
+          // textStyle={}
+          title={"Press me"}
         />
         <ProduceModalScreen />
       </View>

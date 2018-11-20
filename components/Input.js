@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 import { FormInput, FormValidationMessage, FormLabel } from "react-native-elements";
 
 class Input extends PureComponent {
-    // state = {  };
     _handleChange = value => {
         this.props.onChange(this.props.name, value);
     }
