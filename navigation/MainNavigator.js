@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity, Button } from 'react-native';
-import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
 import * as firebase from 'firebase';

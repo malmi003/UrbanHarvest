@@ -1,45 +1,88 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Platform, TouchableOpacity, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TextInput, Button, Linking, Alert, } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
 import ProduceModalScreen from "./ProduceModalScreen";
 
+// export default withNavigation(ListScreen);
 
-class ListScreen extends React.Component {
-  static navigationOptions = {
-    title: 'LinkScreen',
-  };
+import * as firebase from 'firebase';
+
+export default class ListScreen extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentPassword: "",
+      newPassword: "",
+      newEmail: "",
+    };
+  }
+
+  // Occurs when signout is pressed...
+  onSignoutPress = () => {
+    firebase.auth().signOut();
+  }
+
+  // Reauthenticates the current user and returns a promise...
+  reauthenticate = (currentPassword) => {
+    var user = firebase.auth().currentUser;
+    var cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+    return user.reauthenticateWithCredential(cred);
+  }
+
+  // Changes user's password...
+  onChangePasswordPress = () => {
+    this.reauthenticate(this.state.currentPassword).then(() => {
+      var user = firebase.auth().currentUser;
+      user.updatePassword(this.state.newPassword).then(() => {
+        Alert.alert("Password was changed");
+      }).catch((error) => { console.log(error.message); });
+    }).catch((error) => { console.log(error.message) });
+  }
+
+  // Changes user's email...
+  onChangeEmailPress = () => {
+    this.reauthenticate(this.state.currentPassword).then(() => {
+      var user = firebase.auth().currentUser;
+      user.updateEmail(this.state.newEmail).then(() => {
+        Alert.alert("Email was changed");
+      }).catch((error) => { console.log(error.message); });
+    }).catch((error) => { console.log(error.message) });
+  }
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={{ flex: 1, flexDirection: "column", paddingVertical: 50, paddingHorizontal: 10, }}>
+        <Button title="Sign out" onPress={this.onSignoutPress} />
 
-        <ScrollView style={styles.container}>
-          {/* Go ahead and delete ExpoLinksView and replace it with your
-           * content, we just wanted to provide you with some helpful links */}
-          <ExpoLinksView />
-        </ScrollView>
-        {/* <View style={styles.tabBarInfoContainer}>
-          <TouchableOpacity>
-            <Text
-              style={styles.tabBarInfoText}
-              onPress={() => this.props.navigation.navigate("ProduceModal")}
-            >Produce Food
-        </Text>
-          </TouchableOpacity>
-        </View> */}
+        <TextInput style={styles.textInput} value={this.state.currentPassword}
+          placeholder="Current Password" autoCapitalize="none" secureTextEntry={true}
+          onChangeText={(text) => { this.setState({ currentPassword: text }) }}
+        />
+
+        <TextInput style={styles.textInput} value={this.state.newPassword}
+          placeholder="New Password" autoCapitalize="none" secureTextEntry={true}
+          onChangeText={(text) => { this.setState({ newPassword: text }) }}
+        />
+
+        <Button title="Change Password" onPress={this.onChangePasswordPress} />
+
+        <TextInput style={styles.textInput} value={this.state.newEmail}
+          placeholder="New Email" autoCapitalize="none" keyboardType="email-address"
+          onChangeText={(text) => { this.setState({ newEmail: text }) }}
+        />
+
+        <Button title="Change Email" onPress={this.onChangeEmailPress} />
+
         <ProduceModalScreen />
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 15,
-  },
+  text: { color: "white", fontWeight: "bold", textAlign: "center", fontSize: 20, },
+  textInput: { borderWidth: 1, borderColor: "gray", marginVertical: 20, padding: 10, height: 40, alignSelf: "stretch", fontSize: 18, },
 });
-
-export default withNavigation(ListScreen);

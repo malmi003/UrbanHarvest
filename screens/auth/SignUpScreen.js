@@ -25,19 +25,14 @@ export default class SignUpScreen extends React.Component {
     }
 
     onBackToLoginPress = () => {
-        // const navActions = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({routeName: "Login"})]
-        // });
-        // this.props.navigation.dispatch(navActions);
         this.props.navigation.navigate("Login");
-    }
+    };
 
     render() {
         return (
             <View style={{paddingTop:50, alignItems:"center"}}>
 
-                <Text>Signup</Text>
+                <Text>Sign Up</Text>
 
                 <TextInput style={{width: 200, height: 40, borderWidth: 1}}
                     value={this.state.email}

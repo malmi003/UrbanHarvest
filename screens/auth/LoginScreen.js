@@ -19,20 +19,10 @@ export default class LoginScreen extends React.Component {
     }
 
     onCreateAccountPress = () => {
-        // const navActions = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({routeName: "SignUp"})]
-        // });
-        // this.props.navigation.dispatch(navActions);
         this.props.navigation.navigate("SignUp");
-    }
+    };
 
     onForgotPasswordPress = () => {
-        // const navActions = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({routeName: "ForgotPassword"})]
-        // });
-        // this.props.navigation.dispatch(navActions);
         this.props.navigation.navigate("ForgotPassword");
     }
 
@@ -67,8 +57,8 @@ export default class LoginScreen extends React.Component {
                 <Button title="Forgot Password..." onPress={this.onForgotPasswordPress} />
             </View>
         );
-    }
-}
+    };
+};
 
 const styles = StyleSheet.create({
 
