@@ -19,7 +19,6 @@ import ProduceModalScreen from "./ProduceModalScreen";
 
 const { Marker } = MapView;
 
-
 class MapScreen extends React.Component {
   constructor(props) {
     super(props);

@@ -17,6 +17,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { addFood } from "../src/services/addFood";
 import * as firebase from "firebase";
+import { GOOGLE_API_KEY } from 'react-native-dotenv';
 
 class ProduceModalScreen extends React.Component {
   state = {
@@ -30,7 +31,7 @@ class ProduceModalScreen extends React.Component {
   // ** change this to change message in submit button then close after a second or two
   handleSubmit = values => {
     // need to call google api to get coords of addresses then convert to latlng
-    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.address},${values.city},${values.state}${values.zip}&key=AIzaSyAT90i58H7wcu2-wqmOSurlri_j2RdF71I`)
+    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.address},${values.city},${values.state}${values.zip}&key=${GOOGLE_API_KEY}`)
       .then(response => {
         let parsedRes = JSON.parse(response["_bodyInit"]);
         let addFoodPacket = {
