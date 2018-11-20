@@ -6,11 +6,8 @@ import SignUpScreen from "../screens/auth/SignUpScreen";
 import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 import AuthLoadingScreen from "../screens/auth/AuthLoadingScreen";
 
-
-const RootStackNavigator = createSwitchNavigator(
+const authNavigator = createStackNavigator(
   {
-    // You could add another route here for authentication.
-    // Read more at https://reactnavigation.org/docs/en/auth-flow.html 
     Login: {
       screen: LoginScreen,
     },
@@ -19,6 +16,22 @@ const RootStackNavigator = createSwitchNavigator(
     },
     ForgotPassword: {
       screen: ForgotPasswordScreen,
+    },
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerVisible: false,
+    }
+  }
+);
+
+const RootStackNavigator = createSwitchNavigator(
+  {
+    // You could add another route here for authentication.
+    // Read more at https://reactnavigation.org/docs/en/auth-flow.html 
+    Auth: {
+      screen: authNavigator
     },
     Main: {
       screen: MainNavigator,

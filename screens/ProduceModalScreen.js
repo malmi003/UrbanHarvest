@@ -18,6 +18,7 @@ import * as Yup from 'yup';
 import { addFood } from "../src/services/addFood";
 import * as firebase from "firebase";
 import { GOOGLE_API_KEY } from 'react-native-dotenv';
+import Styles from "../constants/Styles";
 
 class ProduceModalScreen extends React.Component {
   state = {
@@ -27,7 +28,7 @@ class ProduceModalScreen extends React.Component {
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-// ** add validation data so can't submit non-address
+  // ** add validation data so can't submit non-address
   // ** change this to change message in submit button then close after a second or two
   handleSubmit = values => {
     // need to call google api to get coords of addresses then convert to latlng
@@ -160,14 +161,14 @@ class ProduceModalScreen extends React.Component {
                       error={touched.contact && errors.contact}
                     />
                     <Button
-                      buttonStyle={styles.submitButton}
+                      buttonStyle={Styles.submitButton}
                       title="Add to Map"
                       onPress={handleSubmit}
                       disabled={!isValid || isSubmitting}
                       loading={isSubmitting}
                     />
                     <Button
-                      buttonStyle={styles.cancelButton}
+                      buttonStyle={Styles.cancelButton}
                       onPress={() => { this.setModalVisible(false); }}
                       title="Cancel"
                     />
@@ -179,12 +180,12 @@ class ProduceModalScreen extends React.Component {
         </View>
 
         {/* Produce Food Button that opens modal */}
-        <View style={styles.tabBarInfoContainer}>
+        <View style={Styles.tabBarInfoContainer}>
           <TouchableOpacity
             onPress={() => {
               this.setModalVisible(true);
             }}>
-            <Text style={styles.tabBarInfoText}>Produce Food</Text>
+            <Text style={Styles.tabBarInfoText}>Produce Food</Text>
           </TouchableOpacity>
         </View>
 
@@ -201,48 +202,6 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     backgroundColor: '#ffffff',
     color: Colors.darkGray,
-  },
-  submitButton: {
-    marginTop: 20,
-    width: "100%",
-    backgroundColor: Colors.headerGreen
-  },
-  cancelButton: {
-    marginTop: 20,
-    width: "100%",
-    backgroundColor: Colors.errorBackground
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: Colors.headerGreen,
-    paddingTop: 8,
-    paddingBottom: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 20,
-    color: Colors.white,
-    textAlign: 'center',
-    fontWeight: "bold",
-    letterSpacing: 1.2,
-    borderWidth: 2,
-    padding: 12,
-    borderRadius: 8,
-    borderColor: Colors.lightGreen,
   },
 })
 

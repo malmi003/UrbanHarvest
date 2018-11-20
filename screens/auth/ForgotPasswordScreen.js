@@ -4,6 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import * as firebase from 'firebase';
 import { Button } from "react-native-elements";
 import Colors from "../../constants/Colors";
+import Styles from "../../constants/Styles";
 
 export default class ForgotPasswordScreen extends React.Component {
     constructor(props) {
@@ -30,7 +31,7 @@ export default class ForgotPasswordScreen extends React.Component {
 
                 <Text style={styles.title}>Forgot Password</Text>
 
-                <TextInput style={styles.inputField}
+                <TextInput style={Styles.inputField}
                     value={this.state.email}
                     onChangeText={(text) => { this.setState({email: text}) }}
                     placeholder="Enter email"
@@ -42,12 +43,12 @@ export default class ForgotPasswordScreen extends React.Component {
                 <Button 
                     title="Reset Password" 
                     onPress={this.onResetPasswordPress} 
-                    buttonStyle={styles.submitButton}
+                    buttonStyle={Styles.submitButton}
                 />
                 <Button 
                     title="Back to Login..." 
                     onPress={this.onBackToLoginPress} 
-                    buttonStyle={styles.plainButton}
+                    buttonStyle={Styles.plainButton}
                 />
             </View>
         );
@@ -60,23 +61,7 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         alignItems: "center",
         justifyContent: "center",
-    },
-    inputField: {
-        fontSize: 20,
-        borderBottomWidth:1,
-        borderBottomColor: Colors.lightGray,
-        width: 300,
-        height: 40,
-    },
-    submitButton: {
-        marginTop: 100,
-        width: "100%",
-        backgroundColor: Colors.headerGreen
-    },
-    plainButton: {
-        backgroundColor: Colors.blue,
-        width: "100%",
-        marginTop: 10,
+        backgroundColor: Colors.white,
     },
     title: {
         fontSize: 30,

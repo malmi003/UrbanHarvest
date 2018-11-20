@@ -42,9 +42,10 @@ class MapScreen extends React.Component {
   //map through the data to figure out if the given lat&lngs are within that range
   // pull all the pins from db, filter through them, create markers for each of those...
   pullFoods = () => {
-    let markerArray = [];
+
     db.ref("currentFood").on("value", snapshot => {
       // grab the coords & hover data from each item in newFoods list
+      let markerArray = [];
       snapshot.forEach(item => {
         let lat = parseFloat(item.val().newFood.lat);
         let lng = parseFloat(item.val().newFood.lng);
@@ -104,6 +105,9 @@ class MapScreen extends React.Component {
     this.pullFoods();
     this.getAndSetCurrentLocation();
   };
+  // componentDidUpdate = () => {
+  //   this.pullFoods();
+  // }
   onRegionChange = region => {
     this.setState({ region });
   };
@@ -117,15 +121,15 @@ class MapScreen extends React.Component {
           onRegionChange={this.onRegionChange}
           showsUserLocation={true}
         >
-        {this.state.markerArray.map(marker => (
-                <Marker
-                  coordinate={marker.latlng}
-                  title={marker.title}
-                  description={marker.description}
-                  image={require("../assets/images/broccoli.png")}
-                  key={marker.key}
-                />
-            ))}
+          {this.state.markerArray.map(marker => (
+            <Marker
+              coordinate={marker.latlng}
+              title={marker.title}
+              description={marker.description}
+              image={require("../assets/images/broccoli.png")}
+              key={marker.key}
+            />
+          ))}
         </MapView>
         <Button
           title="zero on current location"

@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import Colors from "../../constants/Colors";
 import Input from "../../components/Input";
 import { Button } from "react-native-elements";
+import Styles from "../../constants/Styles";
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -28,10 +29,10 @@ export default class LoginScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Login</Text>
+                <Text style={Styles.title}>Login</Text>
 
                 <TextInput 
-                    style={styles.inputField}
+                    style={Styles.inputField}
                     value={this.state.email}
                     onChangeText={(text) => { this.setState({ email: text }) }}
                     placeholder="email"
@@ -41,7 +42,7 @@ export default class LoginScreen extends React.Component {
                 />
 
                 <TextInput 
-                    style={styles.inputField}
+                    style={Styles.inputField}
                     value={this.state.password}
                     onChangeText={(text) => { this.setState({ password: text }) }}
                     placeholder="password"
@@ -51,18 +52,18 @@ export default class LoginScreen extends React.Component {
                 />
                 <Button
                     title="Login"
-                    buttonStyle={styles.submitButton}
+                    buttonStyle={Styles.submitButton}
                     onPress={this.onLoginPress}
                 />
                 <Button
                     title="Create account..."
                     onPress={this.onCreateAccountPress}
-                    buttonStyle={styles.plainButton}
+                    buttonStyle={Styles.plainButton}
                 />
                 <Button
                     title="Forgot Password..."
                     onPress={this.onForgotPasswordPress}
-                    buttonStyle={styles.plainButton}
+                    buttonStyle={Styles.plainButton}
                 />
             </View>
         );
@@ -75,27 +76,6 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: Colors.white,
     },
-    inputField: {
-        fontSize: 20,
-        borderBottomWidth:1,
-        borderBottomColor: Colors.lightGray,
-        width: 300,
-        height: 40,
-    },
-    submitButton: {
-        marginTop: 100,
-        width: "100%",
-        backgroundColor: Colors.headerGreen
-    },
-    plainButton: {
-        backgroundColor: Colors.blue,
-        width: "100%",
-        marginTop: 10,
-    },
-    title: {
-        fontSize: 30,
-        color: Colors.headerGreen,
-        fontWeight: 'bold',
-    }
 });
