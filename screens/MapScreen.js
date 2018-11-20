@@ -49,7 +49,7 @@ class MapScreen extends React.Component {
   };
   
   _pullFoods = () => {
-    console.log(pullFoods, "working");
+    pullFoods();
 
   };
 
