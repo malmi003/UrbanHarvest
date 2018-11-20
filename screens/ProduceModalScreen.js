@@ -27,7 +27,7 @@ class ProduceModalScreen extends React.Component {
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-
+// ** add validation data so can't submit non-address
   // ** change this to change message in submit button then close after a second or two
   handleSubmit = values => {
     // need to call google api to get coords of addresses then convert to latlng
@@ -68,14 +68,14 @@ class ProduceModalScreen extends React.Component {
                 initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
                 onSubmit={this.handleSubmit}
                 validationSchema={Yup.object().shape({
-                  // name: Yup.string().trim().required(),
-                  // description: Yup.string().trim(),
-                  // category: Yup.string().trim(),
+                  name: Yup.string().trim().required(),
+                  description: Yup.string().trim(),
+                  category: Yup.string().trim(),
                   address: Yup.string().trim().required(),
                   city: Yup.string().trim().required(),
                   state: Yup.string().trim().required(),
                   zip: Yup.number().min(501, "Enter a valid zip").max(99950, "Enter a valid zip").required(),
-                  // contact: Yup.string().trim().required(),
+                  contact: Yup.string().trim().required(),
                 })}
                 render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
                   <React.Fragment>
