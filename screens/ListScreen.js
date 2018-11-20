@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Platform, TouchableOpacity, Text, View } from '
 import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
+import ProduceModalScreen from "./ProduceModalScreen";
 
 
 class ListScreen extends React.Component {
@@ -19,7 +20,7 @@ class ListScreen extends React.Component {
            * content, we just wanted to provide you with some helpful links */}
           <ExpoLinksView />
         </ScrollView>
-        <View style={styles.tabBarInfoContainer}>
+        {/* <View style={styles.tabBarInfoContainer}>
           <TouchableOpacity>
             <Text
               style={styles.tabBarInfoText}
@@ -27,7 +28,8 @@ class ListScreen extends React.Component {
             >Produce Food
         </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+        <ProduceModalScreen />
       </View>
     );
   }
@@ -37,38 +39,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: Colors.headerGreen,
-    paddingTop: 8,
-    paddingBottom: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 20,
-    color: Colors.white,
-    textAlign: 'center',
-    fontWeight: "bold",
-    letterSpacing: 1.2,
-    borderWidth: 2,
-    padding: 12,
-    borderRadius: 8,
-    borderColor: Colors.lightGreen,
   },
 });
 

@@ -11,10 +11,12 @@ class Input extends PureComponent {
         this.props.onTouch(this.props.name);
     }
     render() {
-        const { label, error, placeholder, type, ...rest } = this.props;
+        const { label, error, placeholder, type, labelStyle, ...rest } = this.props;
         return (
             <View>
-                <FormLabel>{label}</FormLabel>
+                <FormLabel
+                labelStyle={labelStyle}
+                >{label}</FormLabel>
                 <FormInput
                     onChangeText={this._handleChange}
                     onBlur={this._handleTouch}

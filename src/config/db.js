@@ -7,5 +7,9 @@ const config = {
    projectId: "urbanharvest-76a09",
    storageBucket: "urbanharvest-76a09.appspot.com",
 };
-firebase.initializeApp(config);
+
+// initialize firebase - checks to make sure it hasn't already been initialized
+if (!firebase.apps.length) {
+   firebase.initializeApp(config)
+};
 export const db = firebase.database();

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, createSwitchNavigator } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
+import LoginScreen from "../screens/auth/LoginScreen";
+import SignUpScreen from "../screens/auth/SignUpScreen";
+import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
+import AuthLoadingScreen from "../screens/auth/AuthLoadingScreen";
 
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
-import ProduceModalScreen from "../screens/ProduceModalScreen";
 
 
 class LogoTitle extends React.Component {
@@ -65,7 +68,7 @@ class HeaderViewToggleBtn extends React.Component {
   };
 };
 
-const CustomDrawerContentComponent = (props) => (
+const CustomDrawerContentComponent = props => (
   <ScrollView>
     <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -136,19 +139,33 @@ const LeftDrawerNavigator = createDrawerNavigator(
     contentComponent: CustomDrawerContentComponent,
   }
 );
-
-export default RootStack = createStackNavigator(
+const authNavigator = createStackNavigator(
+ { 
+   Login: {
+    screen: LoginScreen,
+  },
+  SignUp: {
+    screen: SignUpScreen,
+  },
+  ForgotPassword: {
+    screen: ForgotPasswordScreen,
+  },
+}
+)
+export default RootStack = createSwitchNavigator(
   {
+    AuthLoading: {
+      screen: AuthLoadingScreen,
+    },
+    Auth: {
+      screen: authNavigator,
+    },
     Main: {
       screen: LeftDrawerNavigator,
     },
-    ProduceModal: {
-      screen: ProduceModalScreen,
-    },
   },
   {
-    mode: 'modal',
-    headerMode: 'none',
+    initialRouteName: 'AuthLoading',
   }
 )
 

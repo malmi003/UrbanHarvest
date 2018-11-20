@@ -12,8 +12,8 @@ import {
 import { MapView } from 'expo';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
-import { DrawerActions } from 'react-navigation-drawer';
-
+import { pullFoods } from "../src/services/pullFoods";
+import ProduceModalScreen from "./ProduceModalScreen";
 
 const { Marker } = MapView;
 
@@ -23,28 +23,38 @@ class MapScreen extends React.Component {
     super(props);
     this.state = {
       region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: 44.986656,
+        longitude: -93.258133,
+        latitudeDelta: 0.04,
+        longitudeDelta: 0.04,
       },
       initialRegion: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: 44.986656,
+        longitude: -93.258133,
+        // latitudeDelta: 0.0922,
+        latitudeDelta: 0.04,
+        longitudeDelta: 0.04,
+        // longitudeDelta: 0.0421,
       },
       marker: {
         latlng: {
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: 44.986656,
+          longitude: -93.258133,
         },
         title: "myPin",
         description: "hadjcnaecnr"
-      }
+      },
+      modalVisible: false,
     };
+  };
+  
+  _pullFoods = () => {
+    console.log(pullFoods, "working");
+
+  };
+
+  componentWillMount = () => {
+    this._pullFoods();
   };
 
   _onRegionChange = region => {
@@ -68,15 +78,7 @@ class MapScreen extends React.Component {
           />
         </MapView>
 
-        <View style={styles.tabBarInfoContainer}>
-          <TouchableOpacity>
-            <Text
-              style={styles.tabBarInfoText}
-              onPress={() => this.props.navigation.navigate("ProduceModal")}
-            >Produce Food
-              </Text>
-          </TouchableOpacity>
-        </View>
+        <ProduceModalScreen />
       </View>
     );
   };
@@ -87,38 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: Colors.headerGreen,
-    paddingTop: 8,
-    paddingBottom: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 20,
-    color: Colors.white,
-    textAlign: 'center',
-    fontWeight: "bold",
-    letterSpacing: 1.2,
-    borderWidth: 2,
-    padding: 12,
-    borderRadius: 8,
-    borderColor: Colors.lightGreen,
-  },
+
 });
 
 export default withNavigation(MapScreen);

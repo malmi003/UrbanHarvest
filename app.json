@@ -8,9 +8,9 @@
     "platforms": ["ios", "android"],
     "version": "0.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/leafLogo.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/urbanHarvestLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
