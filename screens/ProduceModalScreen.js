@@ -28,7 +28,7 @@ class ProduceModalScreen extends React.Component {
   }
 
   // ** change this to change message in submit button then close after a second or two
-  _handleSubmit = values => {
+  handleSubmit = values => {
     values.userId = firebase.auth().currentUser.uid;
     addFood(values);
     this.setModalVisible(false);
@@ -47,7 +47,7 @@ class ProduceModalScreen extends React.Component {
               }}>
               <Formik
                 initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
-                onSubmit={this._handleSubmit}
+                onSubmit={this.handleSubmit}
                 validationSchema={Yup.object().shape({
                   name: Yup.string().required(),
                   description: Yup.string(),
