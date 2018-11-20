@@ -1,3 +1,5 @@
+// ** need to add loading screen before finishes logging in
+
 import React from 'react';
 import {
   Image,
@@ -28,14 +30,6 @@ class MapScreen extends React.Component {
         latitudeDelta: 0.04,
         longitudeDelta: 0.04,
       },
-      initialRegion: {
-        latitude: 44.986656,
-        longitude: -93.258133,
-        // latitudeDelta: 0.0922,
-        latitudeDelta: 0.04,
-        longitudeDelta: 0.04,
-        // longitudeDelta: 0.0421,
-      },
       marker: {
         latlng: {
           latitude: 44.986656,
@@ -50,13 +44,10 @@ class MapScreen extends React.Component {
   
   _pullFoods = () => {
     pullFoods();
-
   };
-
   componentWillMount = () => {
     this._pullFoods();
   };
-
   _onRegionChange = region => {
     this.setState({ region });
   }
@@ -66,7 +57,6 @@ class MapScreen extends React.Component {
       <View style={styles.container}>
         <MapView
           style={{ flex: 1 }}
-          // initialRegion={this.state.initialRegion}
           region={this.state.region}
           onRegionChange={this.onRegionChange}
         >

@@ -29,10 +29,28 @@ class ProduceModalScreen extends React.Component {
 
   // ** change this to change message in submit button then close after a second or two
   handleSubmit = values => {
-    values.userId = firebase.auth().currentUser.uid;
-    addFood(values);
-    this.setModalVisible(false);
-  }
+    // need to call google api to get coords of addresses then convert to latlng
+    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.address},${values.city},${values.state}${values.zip}&key=AIzaSyAT90i58H7wcu2-wqmOSurlri_j2RdF71I`)
+      .then(response => {
+        let parsedRes = JSON.parse(response["_bodyInit"]);
+        let addFoodPacket = {
+          userId: firebase.auth().currentUser.uid,
+          name: values.name,
+          lat: parsedRes.results[0].geometry.location.lat.toFixed(3),
+          lng: parsedRes.results[0].geometry.location.lng.toFixed(3),
+          description: values.description,
+          category: values.category,
+          contact: values.contact
+        };
+
+        addFood(addFoodPacket);
+        this.setModalVisible(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -49,19 +67,19 @@ class ProduceModalScreen extends React.Component {
                 initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
                 onSubmit={this.handleSubmit}
                 validationSchema={Yup.object().shape({
-                  name: Yup.string().required(),
-                  description: Yup.string(),
-                  category: Yup.string(),
-                  address: Yup.string().required(),
-                  city: Yup.string().required(),
-                  state: Yup.string().required(),
+                  // name: Yup.string().trim().required(),
+                  // description: Yup.string().trim(),
+                  // category: Yup.string().trim(),
+                  address: Yup.string().trim().required(),
+                  city: Yup.string().trim().required(),
+                  state: Yup.string().trim().required(),
                   zip: Yup.number().min(501, "Enter a valid zip").max(99950, "Enter a valid zip").required(),
-                  contact: Yup.string().required(),
+                  // contact: Yup.string().trim().required(),
                 })}
                 render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
                   <React.Fragment>
                     <Input
-                      labelStyle={{ paddingTop: 50, color: Colors.darkGray}}
+                      labelStyle={{ paddingTop: 50, color: Colors.darkGray }}
                       label="Name"
                       placeholder="name"
                       value={values.name}
@@ -72,7 +90,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="Description"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="brief description"
                       value={values.description}
                       onChange={setFieldValue}
@@ -82,7 +100,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="Category"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="food category (produce, boxed, canned, etc)"
                       value={values.category}
                       onChange={setFieldValue}
@@ -92,7 +110,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="Street Address"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="address"
                       value={values.address}
                       onChange={setFieldValue}
@@ -102,7 +120,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="City"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="city"
                       value={values.city}
                       onChange={setFieldValue}
@@ -112,7 +130,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="State"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="state"
                       value={values.state}
                       onChange={setFieldValue}
@@ -122,7 +140,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="Zip"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="zip"
                       value={values.zip}
                       onChange={setFieldValue}
@@ -132,7 +150,7 @@ class ProduceModalScreen extends React.Component {
                     />
                     <Input
                       label="Contact Info"
-                      labelStyle={{color: Colors.darkGray }}
+                      labelStyle={{ color: Colors.darkGray }}
                       placeholder="preferred contact information"
                       value={values.contact}
                       onChange={setFieldValue}
