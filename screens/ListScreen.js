@@ -4,10 +4,9 @@ import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
 import ProduceModalScreen from "./ProduceModalScreen";
-
-// export default withNavigation(ListScreen);
-
 import * as firebase from 'firebase';
+
+
 
 export default class ListScreen extends React.Component {
 
@@ -20,16 +19,17 @@ export default class ListScreen extends React.Component {
     };
   }
 
-  // Occurs when signout is pressed...
-  onSignoutPress = () => {
+  // Occurs when signOut is pressed...
+  onSignOutPress = () => {
     firebase.auth().signOut();
   }
 
   // Reauthenticates the current user and returns a promise...
+
   reauthenticate = (currentPassword) => {
-    var user = firebase.auth().currentUser;
-    var cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-    return user.reauthenticateWithCredential(cred);
+    const user = firebase.auth().currentUser;
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+    return user.reauthenticateAndRetrieveDataWithCredential(credential)
   }
 
   // Changes user's password...
@@ -55,7 +55,7 @@ export default class ListScreen extends React.Component {
   render() {
     return (
       <ScrollView style={{ flex: 1, flexDirection: "column", paddingVertical: 50, paddingHorizontal: 10, }}>
-        <Button title="Sign out" onPress={this.onSignoutPress} />
+        <Button title="Sign out" onPress={this.onSignOutPress} />
 
         <TextInput style={styles.textInput} value={this.state.currentPassword}
           placeholder="Current Password" autoCapitalize="none" secureTextEntry={true}
@@ -86,3 +86,6 @@ const styles = StyleSheet.create({
   text: { color: "white", fontWeight: "bold", textAlign: "center", fontSize: 20, },
   textInput: { borderWidth: 1, borderColor: "gray", marginVertical: 20, padding: 10, height: 40, alignSelf: "stretch", fontSize: 18, },
 });
+
+
+// export default withNavigation(ListScreen);

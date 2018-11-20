@@ -16,6 +16,7 @@ import { Button } from "react-native-elements";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { addFood } from "../src/services/addFood";
+import * as firebase from "firebase";
 
 class ProduceModalScreen extends React.Component {
   state = {
@@ -28,6 +29,7 @@ class ProduceModalScreen extends React.Component {
 
   // ** change this to change message in submit button then close after a second or two
   _handleSubmit = values => {
+    values.userId = firebase.auth().currentUser.uid;
     addFood(values);
     this.setModalVisible(false);
   }

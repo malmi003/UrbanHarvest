@@ -117,7 +117,7 @@ const headerToggleStack = createStackNavigator(
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
       ),
-      headerRight: <Button title="Sign out" onPress={()=> firebase.auth().signOut()}/>
+      // headerRight: <Button title="Sign out" onPress={()=> firebase.auth().signOut()}/>
       
     }),
   }

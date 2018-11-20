@@ -9,8 +9,6 @@ const config = {
 };
 
 // initialize firebase - checks to make sure it hasn't already been initialized
-if (!firebase.apps.length) {
-   firebase.initializeApp(config)
-};
+   firebase.initializeApp(config);
 
 export const db = firebase.database();
