@@ -29,8 +29,8 @@ class DrawerButton extends React.Component {
         <Icon
           name={
             Platform.OS === 'ios'
-              ? 'ios-menu'
-              : 'md-menu'
+              ? 'ios-list'
+              : 'md-list'
           }
           size={40}
           style={{ paddingLeft: 20 }}

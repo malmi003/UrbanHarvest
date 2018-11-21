@@ -195,9 +195,9 @@ class ProduceModalScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    marginTop: 50,
+    // marginTop: 50,
     padding: 20,
-    paddingTop: 25,
+    // paddingTop: 25,
     backgroundColor: '#ffffff',
     color: Colors.darkGray,
   },

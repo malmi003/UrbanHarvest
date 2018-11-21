@@ -30,8 +30,8 @@ class MapScreen extends React.Component {
       region: {
         latitude: 45.986656,
         longitude: -96.258133,
-        latitudeDelta: 0.06,
-        longitudeDelta: 0.06,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
       },
       markerArray: [],
       modalVisible: false,
@@ -87,8 +87,8 @@ class MapScreen extends React.Component {
           longitude: crd.longitude,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
-        }
-      })
+        },
+      });
     };
     const error = err => { if (err) console.log(err) };
     // pull current location from Google - asks user permission
@@ -98,11 +98,9 @@ class MapScreen extends React.Component {
     this.pullFoods();
     this.getAndSetCurrentLocation();
   };
-  // componentDidUpdate = () => {
-  //   this.pullFoods();
-  // }
   onRegionChange = region => {
     this.setState({ region });
+    console.log(this.state.region)
   };
 
   render() {
@@ -124,20 +122,24 @@ class MapScreen extends React.Component {
             />
           ))}
         </MapView>
-        
-        <Button
-          title="zero on current location"
-          onPress={() => { this.getAndSetCurrentLocation() }}
-        />
-        <MyButton 
-          onPress={()=> console.log("hello")}
-          iconName={"menu"}
-          // iconSize={}
-          // iconStyle={}
-          // iconColor={}
-          // textStyle={}
-          title={"Press me"}
-        />
+        <View style={styles.mapButtonContainer}>
+          <MyButton
+            onPress={() => this.pullFoods()}
+            iconName={"refresh"}
+            iconSize={30}
+            // iconStyle={}
+            iconColor={Colors.headerGreen}          // textStyle={}
+          // title={"Press me"}
+          />
+          <MyButton
+            onPress={() => { this.getAndSetCurrentLocation() }}
+            iconName={"locate"}
+            iconSize={30}
+            iconStyle={styles.leftMapIcon}
+            iconColor={Colors.headerGreen}
+            // textStyle={{ backgroundColor: "green" }}
+          />
+        </View>
         <ProduceModalScreen />
       </View>
     );
@@ -149,6 +151,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+  mapButtonContainer: {
+    position: "absolute",
+    bottom:100,
+    paddingLeft: 20,
+  }
 
 });
 
