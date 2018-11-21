@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, Text, View, TextInput, Button, Linking, Alert, 
 import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
-import ProduceModalScreen from "./ProduceModalScreen";
 import * as firebase from 'firebase';
 
 
@@ -76,7 +75,6 @@ export default class ListScreen extends React.Component {
 
         <Button title="Change Email" onPress={this.onChangeEmailPress} />
 
-        <ProduceModalScreen />
       </ScrollView>
     );
   }

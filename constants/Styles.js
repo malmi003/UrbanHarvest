@@ -17,37 +17,27 @@ export default {
     width: "100%",
     backgroundColor: Colors.errorBackground
   },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: Colors.headerGreen,
-    paddingTop: 8,
-    paddingBottom: 20,
+  produceFoodContainer: {
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    
+    // alignItems: 'center',
+    // backgroundColor: Colors.lightGreen,
+    // paddingTop: 8,
+    // paddingBottom: 20,
   },
-  tabBarInfoText: {
-    fontSize: 20,
-    color: Colors.white,
-    textAlign: 'center',
-    fontWeight: "bold",
-    letterSpacing: 1.2,
-    borderWidth: 2,
-    padding: 12,
-    borderRadius: 8,
-    borderColor: Colors.lightGreen,
+  produceFoodText: {
+    // fontSize: 20,
+    // color: Colors.white,
+    // textAlign: 'center',
+    // fontWeight: "bold",
+    // letterSpacing: 1.2,
+    // borderWidth: 2,
+    // padding: 12,
+    // borderRadius: 8,
+    // borderColor: Colors.white,
   },
   inputField: {
     fontSize: 20,

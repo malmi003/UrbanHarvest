@@ -79,8 +79,9 @@ class ProduceModalScreen extends React.Component {
                 })}
                 render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
                   <React.Fragment>
+                    <Text style={{textAlign:"center", color:Colors.darkGray, fontSize: 20, marginTop:35, fontWeight:"bold",}}>Enter Food Information Below</Text>
                     <Input
-                      labelStyle={{ paddingTop: 50, color: Colors.darkGray }}
+                      labelStyle={{ paddingTop: 15, color: Colors.darkGray }}
                       label="Name"
                       placeholder="name"
                       value={values.name}
@@ -178,15 +179,12 @@ class ProduceModalScreen extends React.Component {
           </ScrollView>
 
         {/* Produce Food Button that opens modal */}
-        <View style={Styles.tabBarInfoContainer}>
           <TouchableOpacity
             onPress={() => {
               this.setModalVisible(true);
             }}>
-            <Text style={Styles.tabBarInfoText}>Produce Food</Text>
+            <Text style={styles.rightHeaderButton}>Produce Food!</Text>
           </TouchableOpacity>
-        </View>
-
       </View>
     );
   };
@@ -194,12 +192,23 @@ class ProduceModalScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    // marginTop: 50,
-    padding: 20,
-    // paddingTop: 25,
-    backgroundColor: '#ffffff',
-    color: Colors.darkGray,
+    flex:1,
+  },
+  rightHeaderButton: {
+    alignItems: 'center',
+    backgroundColor: Colors.headerGreen,
+    color: Colors.white,
+    fontSize: 15,
+    width: 80,
+    flexWrap: "wrap",
+    height: 44,
+    textAlign:"center",
+    transform: [{ skewX: '-10deg' }],
+    marginRight: 5,
+    fontWeight: "bold",
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10
   },
 })
 

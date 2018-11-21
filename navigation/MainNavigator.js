@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
 import ListScreen from '../screens/ListScreen';
+import UserSettingsScreen from "../screens/mainMenu/userSettings";
 import * as firebase from 'firebase';
-
+import ProduceModalScreen from "../screens/ProduceModalScreen";
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
 
@@ -24,22 +25,22 @@ class DrawerButton extends React.Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => {this.props.navigation.openDrawer()}}
-        >
+        onPress={() => { this.props.navigation.openDrawer() }}
+      >
         <Icon
           name={
             Platform.OS === 'ios'
               ? 'ios-list'
               : 'md-list'
           }
-          size={40}
-          style={{ paddingLeft: 20 }}
+          size={35}
+          style={{ paddingLeft: 25 }}
           color={Colors.white}
         />
       </TouchableOpacity >
     )
-  }
-}
+  };
+};
 
 class HeaderViewToggleBtn extends React.Component {
   render() {
@@ -68,8 +69,10 @@ class HeaderViewToggleBtn extends React.Component {
 const CustomDrawerContentComponent = props => (
   <ScrollView>
     <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <View style={{alignItems:"center"}}>
+        <LogoTitle />
+      </View>
       <DrawerItems {...props} />
-      <Text style={{paddingLeft:22}}>place your various nav links here!</Text>
     </SafeAreaView>
   </ScrollView>
 );
@@ -109,6 +112,7 @@ const headerToggleStack = createStackNavigator(
     navigationOptions: ({ navigation }) => ({
       headerStyle: {
         backgroundColor: Colors.headerGreen,
+        marginBottom: 0,
       },
       headerTintColor: Colors.white,
       headerTitleStyle: {
@@ -117,19 +121,22 @@ const headerToggleStack = createStackNavigator(
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
       ),
-      // headerRight: <Button title="Sign out" onPress={()=> firebase.auth().signOut()}/>
-      
+      headerRight: <ProduceModalScreen />
+
     }),
   }
 );
 export default LeftDrawerNavigator = createDrawerNavigator(
   {
-    HeaderToggle: { screen: headerToggleStack },
+    "Find Food": { screen: headerToggleStack },
     // place the rest of the stacks here!
+    UserSettings: { screen: UserSettingsScreen },
+    UserSettings2: { screen: UserSettingsScreen },
+    ProduceModal: {screen: ProduceModalScreen},
   },
   {
     drawerPosition: "left",
-    initialRouteName: "HeaderToggle",
+    initialRouteName: "Find Food",
     drawerBackgroundColor: Colors.headerGreen,
     drawerWidth: 300,
     contentComponent: CustomDrawerContentComponent,
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.lightGreen,
     padding: 8,
-    color: Colors.darkGray,
+    color: Colors.darkerHeaderGreen,
     borderColor: Colors.headerGreen,
     borderWidth: 2,
     fontSize: 15,

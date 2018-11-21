@@ -16,9 +16,7 @@ import { MapView } from 'expo';
 import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
-import ProduceModalScreen from "./ProduceModalScreen";
 import MyButton from "../components/Button";
-
 const { Marker } = MapView;
 const { width, height } = Dimensions.get('window');
 
@@ -111,6 +109,7 @@ class MapScreen extends React.Component {
           region={this.state.region}
           onRegionChange={this.onRegionChange}
           showsUserLocation={true}
+          showsMyLocationButton={true}
         >
           {this.state.markerArray.map(marker => (
             <Marker
@@ -127,20 +126,27 @@ class MapScreen extends React.Component {
             onPress={() => this.pullFoods()}
             iconName={"refresh"}
             iconSize={30}
-            // iconStyle={}
-            iconColor={Colors.headerGreen}          // textStyle={}
-          // title={"Press me"}
+            iconStyle={styles.leftMapIcon}
+            iconColor={Colors.headerGreen}
+          />
+          {/* contact producer button */}
+          <MyButton
+            onPress={() => { this.getAndSetCurrentLocation() }}
+            iconName={"contact"}
+            iconSize={30}
+            iconColor={Colors.white}
+            buttonStyle={styles.producerButtonActive}
+            textStyle={styles.buttonText}
+            title={" Contact Producer"}
           />
           <MyButton
             onPress={() => { this.getAndSetCurrentLocation() }}
             iconName={"locate"}
             iconSize={30}
-            iconStyle={styles.leftMapIcon}
+            iconStyle={styles.rightMapIcon}
             iconColor={Colors.headerGreen}
-            // textStyle={{ backgroundColor: "green" }}
           />
         </View>
-        <ProduceModalScreen />
       </View>
     );
   };
@@ -150,13 +156,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+    // backgroundColor: "transparent",
   },
   mapButtonContainer: {
-    position: "absolute",
-    bottom:100,
-    paddingLeft: 20,
-  }
+    // flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 0,
+    padding: 8,
+    alignItems: "flex-end",
+    backgroundColor: Colors.lightGreen,
+  },
+  rightMapIcon: {
+    // textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    // textShadowOffset: {width: -1, height: 1},
+    // textShadowRadius: 2
+    
+  },
+  leftMapIcon: {
+  },
+  producerButtonActive: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    padding: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
+    backgroundColor:Colors.headerGreen,
+  },
+  producerButtonInActive: {
+  },
+  buttonText: {
+    color: Colors.white,
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+    letterSpacing: 1.2,
+  },
+  inactive: {
 
+  },
 });
 
 export default withNavigation(MapScreen);
