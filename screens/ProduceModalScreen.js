@@ -185,12 +185,19 @@ class ProduceModalScreen extends React.Component {
         </Modal>
 
         {/* Produce Food Button that opens modal */}
-        <TouchableOpacity
+        <Button
           onPress={() => {
             this.setModalVisible(true);
-          }}>
-          <Text style={styles.rightHeaderButton}>Produce Food!</Text>
-        </TouchableOpacity>
+          }}
+          title="Add New Food"
+          backgroundColor= {Colors.headerGreen}
+          icon={{
+            name: "add",
+            size:20,
+          }}
+          textStyle={{fontStyle:"italic"}}
+          containerViewStyle={{marginLeft:0, marginRight:0}}
+          />
       </View>
     );
   };
@@ -200,22 +207,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  rightHeaderButton: {
-    alignItems: 'center',
-    backgroundColor: Colors.headerGreen,
-    color: Colors.white,
-    fontSize: 15,
-    width: 80,
-    flexWrap: "wrap",
-    height: 44,
-    textAlign: "center",
-    transform: [{ skewX: '-10deg' }],
-    marginRight: 5,
-    fontWeight: "bold",
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10
-  },
+  // rightHeaderButton: {
+  //   alignItems: 'center',
+  //   backgroundColor: Colors.headerGreen,
+  //   color: Colors.white,
+  //   fontSize: 15,
+  //   width: 80,
+  //   flexWrap: "wrap",
+  //   height: 44,
+  //   textAlign: "center",
+  //   transform: [{ skewX: '-10deg' }],
+  //   marginRight: 5,
+  //   fontWeight: "bold",
+  //   textShadowColor: 'rgba(0, 0, 0, 0.3)',
+  //   textShadowOffset: { width: -1, height: 1 },
+  //   textShadowRadius: 10
+  // },
 })
 
 export default withNavigation(ProduceModalScreen);

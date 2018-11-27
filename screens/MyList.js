@@ -18,10 +18,12 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { addFood } from "../src/services/addFood";
 import * as firebase from "firebase";
-import { GOOGLE_API_KEY } from 'react-native-dotenv';
+// import { GOOGLE_API_KEY } from 'react-native-dotenv';
 import Styles from "../constants/Styles";
 import { db, } from "../src/config/db";
 import Icon from "../components/Icon";
+import MyButton from "../components/Button";
+import ProduceModalScreen from "../screens/ProduceModalScreen";
 
 // let userId = firebase.auth().currentUser.uid;
 
@@ -29,28 +31,41 @@ class MyListScreen extends React.Component {
     state = {
         modalVisible: false,
         myFoodsArray: [],
+        focusFood: "",
     };
 
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
     };
     getUserFoods = () => {
-        db.ref("/users/" + firebase.auth().currentUser.uid).on("value", snapshot => {
-            console.log("SNAPSHOTS: ", snapshot.val(), "Second SNAPSHOTS: ", snapshot)
+        db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood").on("value", snapshot => {
             let myFoodsArray = [];
+            console.log(snapshot.val())
             snapshot.forEach(item => {
-                let name = item.val().currentFood.name;
-                console.log(name);
-                myFoodsArray.push(item.val().currentFood);
+                myFoodsArray.push(item.val());
             });
-
             this.setState({
                 myFoodsArray: myFoodsArray,
-            })
+            });
         });
     };
-    handleDelete = values => {
+    handleDelete = key => {
+        console.log(key)
+        // first go get that item from the DB
+        db.ref("/currentFood/" + key).once("value")
+            .then(snapshot => {
+                let deletedItem = snapshot.val();
+                // and add it to the harvested foods list ( ** need to separate out functions of simply remove and harvest)
+                console.log("deleted item: ", deletedItem)
+                // add it to their harvestedFoods
+                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/harvestedFood/" + key).push(deletedItem)
+                // remove from the current food list
+                db.ref("/currentFood/" + key).remove();
+                // remove it from their current food list
+                db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+            });
 
+        // 
     };
     componentWillMount = () => {
         this.getUserFoods();
@@ -83,40 +98,61 @@ class MyListScreen extends React.Component {
                             <Text style={{ paddingRight: 30 }}></Text>
                         </View>
                         <View>
-
-                            <FlatList
-                                data={this.state.myFoodsArray}
-                                renderItem={({ item }) =>
-                                    <Text>{item.name}</Text>}
-                                keyExtractor={item => item.name}
-                            />
-                            {console.log(this.state.myFoodsArray)
-                                // (this.state.myFoodArray) ? console.log("c-logging", JSON.parse(JSON.stringify(this.state.myFoodsArray))) : console.log("nothing here")
+                            <ProduceModalScreen />
+                            {/* if statement that either displays your foods from the DB or "none" message */}
+                            {!this.state.myFoodsArray.length 
+                                ? <Text style={[styles.listItemTitle, {margin:10, marginBottom:30, marginTop:25}]}>You don't have any foods to display at this time. Click "Add New Food" to start adding to the map.</Text> 
+                                : <FlatList
+                                    data={this.state.myFoodsArray}
+                                    renderItem={({ item }) =>
+                                        <View style={{
+                                            flexDirection: "row",
+                                            justifyContent: 'space-between',
+                                            borderBottomWidth: 1,
+                                            borderTopWidth: 1
+                                        }}
+                                        >
+                                            <View>
+                                                <Text style={styles.listItemTitle}>{item.name}</Text>
+                                                <Text style={styles.listItemDesc}>{item.description}</Text>
+                                            </View>
+                                            <View>
+                                                <Button
+                                                    onPress={() => console.log("update")}
+                                                    title="update"
+                                                    backgroundColor={Colors.warningBackground}
+                                                    color={Colors.darkGray}
+                                                    fontSize={15}
+                                                    rounded={true}
+                                                    buttonStyle={{ marginBottom: 2 }}
+                                                    containerViewStyle={{ marginTop: 8 }}
+                                                    key="this is the id"
+                                                />
+                                                <Button
+                                                    onPress={() => this.handleDelete(item.key)}
+                                                    title="Harvest/Remove"
+                                                    backgroundColor={Colors.errorBackground}
+                                                    fontSize={15}
+                                                    rounded={true}
+                                                    containerViewStyle={{ marginBottom: 8 }}
+                                                />
+                                            </View>
+                                        </View>}
+                                    keyExtractor={item => item.name}
+                                />
                             }
-                            {/* {
-                                this.state.myFoodsArray.map(food => (
-                                    <Marker
-                                        coordinate={marker.latlng}
-                                        title={marker.title}
-                                        description={marker.description}
-                                        image={require("../assets/images/broccoli.png")}
-                                        key={marker.key}
-                                        onPress={e => console.log(e._targetInst.return.key)}
-                                    // onPress={event => console.log(event._targetInst.return.key, event.nativeEvent)}
-                                    // onCalloutPress={e => console.log("hello", e.nativeEvent)}
-                                    />
-                                ))
-                            } */}
                         </View>
+
                         <Button
-                            buttonStyle={[Styles.cancelButton, { marginBottom: 20 }]}
+                            buttonStyle={[Styles.cancelButton, { marginBottom: 20, marginTop: 0 }]}
+                            containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
                             onPress={() => { this.setModalVisible(false); }}
                             title="Close"
                         />
                     </ScrollView>
                 </Modal>
 
-                {/* Produce Food Button that opens modal */}
+                {/* My list Button that opens modal */}
                 <TouchableOpacity
                     onPress={() => {
                         this.setModalVisible(true);
@@ -137,8 +173,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: "row",
         marginTop: 40,
-        // textAlign: "center",
-
+        marginBottom: 30,
     },
     rightHeaderButton: {
         alignItems: 'center',
@@ -157,6 +192,15 @@ const styles = StyleSheet.create({
         textShadowRadius: 10,
         paddingRight: 25,
     },
+    listItemTitle: {
+        fontSize: 20,
+        paddingLeft: 10,
+    },
+    listItemDesc: {
+        fontSize: 15,
+        paddingLeft: 10,
+    },
+
 })
 
 export default withNavigation(MyListScreen);

@@ -43,10 +43,10 @@ class MapScreen extends React.Component {
       // grab the coords & hover data from each item in newFoods list
       let markerArray = [];
       snapshot.forEach(item => {
-        let lat = parseFloat(item.val().newFood.lat);
-        let lng = parseFloat(item.val().newFood.lng);
-        let name = item.val().newFood.name;
-        let description = item.val().newFood.description;
+        let lat = parseFloat(item.val().lat);
+        let lng = parseFloat(item.val().lng);
+        let name = item.val().name;
+        let description = item.val().description;
         let itemKey = item.key;
 
         // push each one into the marker array

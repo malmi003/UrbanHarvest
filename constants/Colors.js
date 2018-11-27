@@ -1,3 +1,4 @@
+// teal
 const tintColor = '#69a9b3';
 
 export default {
@@ -8,13 +9,18 @@ export default {
   darkGray: "#181818",
   white: '#fff',
   lightGray: "#dddddd",
+  // light gray
   iconDefault: '#ccc',
   iconSelected: tintColor,
+  // grayish white
   tabBar: '#fefefe',
+  // red
   errorBackground: '#b36c69',
   errorText: '#b36c69',
-  warningBackground: '#EAEB5E',
-  warningText: '#666804',
+  // yellow
+  warningBackground: '#e0e07e',
+  warningText: '#666462',
+  // blues
   noticeBackground: tintColor,
   blue: "#69a9b3",
 };
