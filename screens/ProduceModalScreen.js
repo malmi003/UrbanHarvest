@@ -40,11 +40,16 @@ class ProduceModalScreen extends React.Component {
           name: values.name,
           lat: parsedRes.results[0].geometry.location.lat.toFixed(3),
           lng: parsedRes.results[0].geometry.location.lng.toFixed(3),
+          region: parsedRes.results[0].address_components[2].long_name,
           description: values.description,
           category: values.category,
-          contact: values.contact
+          contact: values.contact,
+          // needs to be object w/ location.latitude
+          // region2: Expo.Location.reverseGeocodeAsync(values.lat, values.lng),
         };
+        console.log(addFoodPacket.region)
 
+        // console.log(addFoodPacket.region, addFoodPacket.region2)
         addFood(addFoodPacket);
         this.setModalVisible(false);
       })
@@ -56,135 +61,136 @@ class ProduceModalScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(false)
+          }}>
           <ScrollView>
-            <Modal
-              animationType="slide"
-              transparent={false}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {
-                this.setModalVisible(false)
-              }}>
-              <Formik
-                initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
-                onSubmit={this.handleSubmit}
-                validationSchema={Yup.object().shape({
-                  name: Yup.string().trim().required(),
-                  description: Yup.string().trim(),
-                  category: Yup.string().trim(),
-                  address: Yup.string().trim().required(),
-                  city: Yup.string().trim().required(),
-                  state: Yup.string().trim().required(),
-                  zip: Yup.number().min(501, "Enter a valid zip").max(99950, "Enter a valid zip").required(),
-                  contact: Yup.string().trim().required(),
-                })}
-                render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
-                  <React.Fragment>
-                    <Text style={{textAlign:"center", color:Colors.darkGray, fontSize: 20, marginTop:35, fontWeight:"bold",}}>Enter Food Information Below</Text>
-                    <Input
-                      labelStyle={{ paddingTop: 15, color: Colors.darkGray }}
-                      label="Name"
-                      placeholder="name"
-                      value={values.name}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="name"
-                      error={touched.name && errors.name}
-                    />
-                    <Input
-                      label="Description"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="brief description"
-                      value={values.description}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="description"
-                      error={touched.description && errors.description}
-                    />
-                    <Input
-                      label="Category"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="food category (produce, boxed, canned, etc)"
-                      value={values.category}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="category"
-                      error={touched.category && errors.category}
-                    />
-                    <Input
-                      label="Street Address"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="address"
-                      value={values.address}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="address"
-                      error={touched.address && errors.address}
-                    />
-                    <Input
-                      label="City"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="city"
-                      value={values.city}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="city"
-                      error={touched.city && errors.city}
-                    />
-                    <Input
-                      label="State"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="state"
-                      value={values.state}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="state"
-                      error={touched.state && errors.state}
-                    />
-                    <Input
-                      label="Zip"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="zip"
-                      value={values.zip}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="zip"
-                      error={touched.zip && errors.zip}
-                    />
-                    <Input
-                      label="Contact Info"
-                      labelStyle={{ color: Colors.darkGray }}
-                      placeholder="preferred contact information"
-                      value={values.contact}
-                      onChange={setFieldValue}
-                      onTouch={setFieldTouched}
-                      name="contact"
-                      error={touched.contact && errors.contact}
-                    />
-                    <Button
-                      buttonStyle={Styles.smallGapSubmitButton}
-                      title="Add to Map"
-                      onPress={handleSubmit}
-                      disabled={!isValid || isSubmitting}
-                      loading={isSubmitting}
-                    />
-                    <Button
-                      buttonStyle={Styles.cancelButton}
-                      onPress={() => { this.setModalVisible(false); }}
-                      title="Cancel"
-                    />
-                  </React.Fragment>
-                )}
-              />
-            </Modal>
+
+            <Formik
+              initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
+              onSubmit={this.handleSubmit}
+              validationSchema={Yup.object().shape({
+                name: Yup.string().trim().required(),
+                description: Yup.string().trim(),
+                category: Yup.string().trim(),
+                address: Yup.string().trim().required(),
+                city: Yup.string().trim().required(),
+                state: Yup.string().trim().required(),
+                zip: Yup.number().min(501, "Enter a valid zip").max(99950, "Enter a valid zip").required(),
+                contact: Yup.string().trim().required(),
+              })}
+              render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
+                <React.Fragment>
+                  <Text style={{ textAlign: "center", color: Colors.darkGray, fontSize: 20, marginTop: 35, fontWeight: "bold", }}>Enter Food Information Below</Text>
+                  <Input
+                    labelStyle={{ paddingTop: 15, color: Colors.darkGray }}
+                    label="Name"
+                    placeholder="name"
+                    value={values.name}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="name"
+                    error={touched.name && errors.name}
+                  />
+                  <Input
+                    label="Description"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="brief description"
+                    value={values.description}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="description"
+                    error={touched.description && errors.description}
+                  />
+                  <Input
+                    label="Category"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="food category (produce, boxed, canned, etc)"
+                    value={values.category}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="category"
+                    error={touched.category && errors.category}
+                  />
+                  <Input
+                    label="Street Address"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="address"
+                    value={values.address}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="address"
+                    error={touched.address && errors.address}
+                  />
+                  <Input
+                    label="City"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="city"
+                    value={values.city}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="city"
+                    error={touched.city && errors.city}
+                  />
+                  <Input
+                    label="State"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="state"
+                    value={values.state}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="state"
+                    error={touched.state && errors.state}
+                  />
+                  <Input
+                    label="Zip"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="zip"
+                    value={values.zip}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="zip"
+                    error={touched.zip && errors.zip}
+                  />
+                  <Input
+                    label="Contact Info"
+                    labelStyle={{ color: Colors.darkGray }}
+                    placeholder="preferred contact information"
+                    value={values.contact}
+                    onChange={setFieldValue}
+                    onTouch={setFieldTouched}
+                    name="contact"
+                    error={touched.contact && errors.contact}
+                  />
+                  <Button
+                    buttonStyle={Styles.smallGapSubmitButton}
+                    title="Add to Map"
+                    onPress={handleSubmit}
+                    disabled={!isValid || isSubmitting}
+                    loading={isSubmitting}
+                  />
+                  <Button
+                    buttonStyle={[Styles.cancelButton, { marginBottom: 20 }]}
+                    onPress={() => { this.setModalVisible(false); }}
+                    title="Cancel"
+                  />
+                </React.Fragment>
+              )}
+            />
           </ScrollView>
+        </Modal>
 
         {/* Produce Food Button that opens modal */}
-          <TouchableOpacity
-            onPress={() => {
-              this.setModalVisible(true);
-            }}>
-            <Text style={styles.rightHeaderButton}>Produce Food!</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this.setModalVisible(true);
+          }}>
+          <Text style={styles.rightHeaderButton}>Produce Food!</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -192,7 +198,7 @@ class ProduceModalScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
   },
   rightHeaderButton: {
     alignItems: 'center',
@@ -202,12 +208,12 @@ const styles = StyleSheet.create({
     width: 80,
     flexWrap: "wrap",
     height: 44,
-    textAlign:"center",
+    textAlign: "center",
     transform: [{ skewX: '-10deg' }],
     marginRight: 5,
     fontWeight: "bold",
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10
   },
 })

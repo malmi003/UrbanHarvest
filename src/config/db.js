@@ -1,3 +1,4 @@
+import React from 'react';
 import * as firebase from 'firebase';
 
 const config = {
@@ -12,3 +13,6 @@ const config = {
    firebase.initializeApp(config);
 
 export const db = firebase.database();
+
+// export const userId = firebase.UserInfo.uid;
+// export const userId = firebase.auth().currentUser.uid;

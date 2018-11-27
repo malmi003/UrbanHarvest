@@ -101,6 +101,11 @@ class MapScreen extends React.Component {
     console.log(this.state.region)
   };
 
+  presentContactInformation = () => {
+    // need to set the contactId state to the id for the clicked on marker (need to be able to toggle on and off)
+    // then query the DB with that ID to bring back entire food object, set the contact information 
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -118,6 +123,9 @@ class MapScreen extends React.Component {
               description={marker.description}
               image={require("../assets/images/broccoli.png")}
               key={marker.key}
+              onPress={e => console.log(e._targetInst.return.key)}
+              // onPress={event => console.log(event._targetInst.return.key, event.nativeEvent)}
+              // onCalloutPress={e => console.log("hello", e.nativeEvent)}
             />
           ))}
         </MapView>

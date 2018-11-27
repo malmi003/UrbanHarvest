@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import ProduceModalScreen from "../screens/ProduceModalScreen";
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
+import MyListScreen from "../screens/MyList";
 
 
 class LogoTitle extends React.Component {
@@ -30,8 +31,8 @@ class DrawerButton extends React.Component {
         <Icon
           name={
             Platform.OS === 'ios'
-              ? 'ios-list'
-              : 'md-list'
+              ? 'ios-menu'
+              : 'md-menu'
           }
           size={35}
           style={{ paddingLeft: 25 }}
@@ -121,7 +122,7 @@ const headerToggleStack = createStackNavigator(
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
       ),
-      headerRight: <ProduceModalScreen />
+      headerRight: <MyListScreen />
 
     }),
   }
