@@ -49,7 +49,7 @@ class MyListScreen extends React.Component {
             });
         });
     };
-    handleDelete = key => {
+    handleHarvest = key => {
         console.log(key)
         // first go get that item from the DB
         db.ref("/currentFood/" + key).once("value")
@@ -64,8 +64,24 @@ class MyListScreen extends React.Component {
                 // remove it from their current food list
                 db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
             });
-
-        // 
+    };
+    handleDelete = key => {
+        console.log(key)
+        Alert.alert("Are you sure you want to delete this item?", "",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Delete", onPress: () => {
+                        // remove from the current food list
+                        db.ref("/currentFood/" + key).remove();
+                        // remove it from their current food list
+                        db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+                    }
+                }
+            ]);
+    };
+    handleUpdate = key => {
+        // ** need to add this update functionality (button built but commented out down below)
     };
     componentWillMount = () => {
         this.getUserFoods();
@@ -100,8 +116,8 @@ class MyListScreen extends React.Component {
                         <View>
                             <ProduceModalScreen />
                             {/* if statement that either displays your foods from the DB or "none" message */}
-                            {!this.state.myFoodsArray.length 
-                                ? <Text style={[styles.listItemTitle, {margin:10, marginBottom:30, marginTop:25}]}>You don't have any foods to display at this time. Click "Add New Food" to start adding to the map.</Text> 
+                            {!this.state.myFoodsArray.length
+                                ? <Text style={[styles.listItemTitle, { margin: 10, marginBottom: 30, marginTop: 25 }]}>You don't have any foods to display at this time. Click "Add New Food" to start adding to the map.</Text>
                                 : <FlatList
                                     data={this.state.myFoodsArray}
                                     renderItem={({ item }) =>
@@ -118,21 +134,28 @@ class MyListScreen extends React.Component {
                                             </View>
                                             <View>
                                                 <Button
-                                                    onPress={() => console.log("update")}
+                                                    onPress={() => this.handleHarvest(item.key)}
+                                                    title="harvest"
+                                                    backgroundColor={Colors.headerGreen}
+                                                    fontSize={20}
+                                                    rounded={true}
+                                                    buttonStyle={{ marginBottom: 3, width: 150 }}
+                                                    containerViewStyle={{ marginTop: 8 }}
+                                                />
+                                                {/* <Button
+                                                    onPress={() => this.handleUpdate(item.key)}
                                                     title="update"
                                                     backgroundColor={Colors.warningBackground}
                                                     color={Colors.darkGray}
-                                                    fontSize={15}
+                                                    fontSize={20}
                                                     rounded={true}
-                                                    buttonStyle={{ marginBottom: 2 }}
-                                                    containerViewStyle={{ marginTop: 8 }}
-                                                    key="this is the id"
-                                                />
+                                                    buttonStyle={{ marginBottom: 3 }}
+                                                /> */}
                                                 <Button
                                                     onPress={() => this.handleDelete(item.key)}
-                                                    title="Harvest/Remove"
+                                                    title="remove"
                                                     backgroundColor={Colors.errorBackground}
-                                                    fontSize={15}
+                                                    fontSize={20}
                                                     rounded={true}
                                                     containerViewStyle={{ marginBottom: 8 }}
                                                 />
