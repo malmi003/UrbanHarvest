@@ -44,6 +44,7 @@ export default class SignUpScreen extends React.Component {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="next"
                 />
                 <TextInput style={Styles.inputField}
                     value={this.state.password}
@@ -52,6 +53,7 @@ export default class SignUpScreen extends React.Component {
                     secureTextEntry={true}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="next"
                 />
 
                 <TextInput style={Styles.inputField}
@@ -61,6 +63,7 @@ export default class SignUpScreen extends React.Component {
                     secureTextEntry={true}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="next"
                 />
 
                 <Button 

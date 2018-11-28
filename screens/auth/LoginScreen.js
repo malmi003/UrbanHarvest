@@ -39,6 +39,7 @@ export default class LoginScreen extends React.Component {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="next"
                 />
 
                 <TextInput 
@@ -49,6 +50,7 @@ export default class LoginScreen extends React.Component {
                     secureTextEntry={true}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="done"
                 />
                 <Button
                     title="Login"

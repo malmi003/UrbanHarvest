@@ -40,7 +40,7 @@ class MyListScreen extends React.Component {
     getUserFoods = () => {
         db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood").on("value", snapshot => {
             let myFoodsArray = [];
-            console.log(snapshot.val())
+            // console.log(snapshot.val())
             snapshot.forEach(item => {
                 myFoodsArray.push(item.val());
             });
@@ -50,7 +50,6 @@ class MyListScreen extends React.Component {
         });
     };
     handleHarvest = key => {
-        console.log(key)
         // first go get that item from the DB
         db.ref("/currentFood/" + key).once("value")
             .then(snapshot => {
@@ -124,8 +123,10 @@ class MyListScreen extends React.Component {
                                         <View style={{
                                             flexDirection: "row",
                                             justifyContent: 'space-between',
+                                            marginTop: 10,
                                             borderBottomWidth: 1,
-                                            borderTopWidth: 1
+                                            borderBottomColor: Colors.lightGray,
+                                            // borderTopWidth: 1
                                         }}
                                         >
                                             <View>
@@ -141,6 +142,7 @@ class MyListScreen extends React.Component {
                                                     rounded={true}
                                                     buttonStyle={{ marginBottom: 3, width: 150 }}
                                                     containerViewStyle={{ marginTop: 8 }}
+                                                    raised= {true}
                                                 />
                                                 {/* <Button
                                                     onPress={() => this.handleUpdate(item.key)}
@@ -150,6 +152,7 @@ class MyListScreen extends React.Component {
                                                     fontSize={20}
                                                     rounded={true}
                                                     buttonStyle={{ marginBottom: 3 }}
+                                                    raised= {true}
                                                 /> */}
                                                 <Button
                                                     onPress={() => this.handleDelete(item.key)}
@@ -158,6 +161,7 @@ class MyListScreen extends React.Component {
                                                     fontSize={20}
                                                     rounded={true}
                                                     containerViewStyle={{ marginBottom: 8 }}
+                                                    raised= {true}
                                                 />
                                             </View>
                                         </View>}

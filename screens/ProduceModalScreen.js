@@ -95,6 +95,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="name"
                     error={touched.name && errors.name}
+                    returnKeyType="next"
                   />
                   <Input
                     label="Description"
@@ -105,6 +106,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="description"
                     error={touched.description && errors.description}
+                    returnKeyType="next"
                   />
                   <Input
                     label="Category"
@@ -115,6 +117,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="category"
                     error={touched.category && errors.category}
+                    returnKeyType="next"
                   />
                   <Input
                     label="Street Address"
@@ -125,6 +128,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="address"
                     error={touched.address && errors.address}
+                    returnKeyType="next"
                   />
                   <Input
                     label="City"
@@ -135,6 +139,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="city"
                     error={touched.city && errors.city}
+                    returnKeyType="next"
                   />
                   <Input
                     label="State"
@@ -145,6 +150,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="state"
                     error={touched.state && errors.state}
+                    returnKeyType="next"
                   />
                   <Input
                     label="Zip"
@@ -155,6 +161,8 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="zip"
                     error={touched.zip && errors.zip}
+                    keyboardType="numeric"
+                    returnKeyType="next"
                   />
                   <Input
                     label="Contact Info"
@@ -165,6 +173,7 @@ class ProduceModalScreen extends React.Component {
                     onTouch={setFieldTouched}
                     name="contact"
                     error={touched.contact && errors.contact}
+                    returnKeyType="done"
                   />
                   <Button
                     buttonStyle={Styles.smallGapSubmitButton}
@@ -197,6 +206,7 @@ class ProduceModalScreen extends React.Component {
           }}
           textStyle={{fontStyle:"italic"}}
           containerViewStyle={{marginLeft:0, marginRight:0}}
+          // raised= {true}
           />
       </View>
     );

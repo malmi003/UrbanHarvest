@@ -38,6 +38,7 @@ export default class ForgotPasswordScreen extends React.Component {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    returnKeyType="done"
                 />
 
                 <Button 

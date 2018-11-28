@@ -17,7 +17,7 @@ import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
 import MyButton from "../components/Button";
-const { Marker } = MapView;
+const { Marker, Callout } = MapView;
 const { width, height } = Dimensions.get('window');
 
 
@@ -33,6 +33,8 @@ class MapScreen extends React.Component {
       },
       markerArray: [],
       modalVisible: false,
+      contactId: "",
+      contactInfo: "",
     };
   };
   // figure out the bounds of the screen (upper&lower lat& long)
@@ -65,7 +67,6 @@ class MapScreen extends React.Component {
       });
     });
   };
-
   getAndSetCurrentLocation = () => {
     const options = {
       enableHighAccuracy: true,
@@ -98,14 +99,20 @@ class MapScreen extends React.Component {
   };
   onRegionChange = region => {
     this.setState({ region });
-    console.log(this.state.region)
+    console.log("State: ", this.state)
   };
+  setContactInformation = key => {
+    db.ref("/currentFood/" + key).on("value", snapshot => {
+      this.setState({
+        contactId: key,
+        contactInfo: snapshot.val().contact,
+      });
+      console.log("setting marker", this.state.contactInfo);
+    });
+  };
+  initiateContact = key => {
 
-  presentContactInformation = () => {
-    // need to set the contactId state to the id for the clicked on marker (need to be able to toggle on and off)
-    // then query the DB with that ID to bring back entire food object, set the contact information 
   }
-
   render() {
     return (
       <View style={styles.container}>
@@ -115,6 +122,14 @@ class MapScreen extends React.Component {
           onRegionChange={this.onRegionChange}
           showsUserLocation={true}
           showsMyLocationButton={true}
+          loadingEnabled={true}
+          // reset the marker state on deselect
+          onMarkerDeselect={() => {
+            this.setState({
+              contactId: "",
+              contactInfo: "",
+            });
+          }}
         >
           {this.state.markerArray.map(marker => (
             <Marker
@@ -123,10 +138,14 @@ class MapScreen extends React.Component {
               description={marker.description}
               image={require("../assets/images/broccoli.png")}
               key={marker.key}
-              onPress={e => console.log(e._targetInst.return.key)}
-              // onPress={event => console.log(event._targetInst.return.key, event.nativeEvent)}
-              // onCalloutPress={e => console.log("hello", e.nativeEvent)}
-            />
+              onPress={e => this.setContactInformation(e._targetInst.return.key)}
+            >
+              {/* <Callout>
+                <Text style={{fontSize:20,}}>{marker.title}</Text>
+                <Text>{marker.description}</Text>
+                {/*  ** add image of food here */}
+              {/* </Callout> */}
+            </Marker>
           ))}
         </MapView>
         <View style={styles.mapButtonContainer}>
@@ -143,7 +162,7 @@ class MapScreen extends React.Component {
             iconName={"contact"}
             iconSize={30}
             iconColor={Colors.white}
-            buttonStyle={styles.producerButtonActive}
+            buttonStyle={this.state.contactId?styles.producerButtonActive: styles.producerButtonInActive}
             textStyle={styles.buttonText}
             title={" Contact Producer"}
           />
@@ -179,7 +198,7 @@ const styles = StyleSheet.create({
     // textShadowColor: 'rgba(0, 0, 0, 0.5)',
     // textShadowOffset: {width: -1, height: 1},
     // textShadowRadius: 2
-    
+
   },
   leftMapIcon: {
   },
@@ -200,9 +219,26 @@ const styles = StyleSheet.create({
         elevation: 20,
       },
     }),
-    backgroundColor:Colors.headerGreen,
+    backgroundColor: Colors.headerGreen,
   },
   producerButtonInActive: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    padding: 8,
+    backgroundColor: Colors.lightGreen,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
   },
   buttonText: {
     color: Colors.white,
@@ -211,9 +247,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 1.2,
   },
-  inactive: {
 
-  },
 });
 
 export default withNavigation(MapScreen);
