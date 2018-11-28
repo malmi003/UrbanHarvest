@@ -6,7 +6,10 @@ class MyButton extends PureComponent {
     render() {
         return (
             // <View style={this.props.buttonStyle}>
-            <TouchableOpacity onPress={this.props.onPress} >
+            <TouchableOpacity
+                onPress={this.props.onPress}
+                disabled={this.props.disabled}
+            >
                 <View style={this.props.buttonStyle}>
                     <Icon
                         name={
