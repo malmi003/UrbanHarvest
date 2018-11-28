@@ -12,7 +12,7 @@ import {
   Button,
   Dimensions,
 } from 'react-native';
-import { MapView, MailComposer } from 'expo';
+import { MapView, SMS, MailComposer } from 'expo';
 import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
@@ -35,6 +35,7 @@ class MapScreen extends React.Component {
       modalVisible: false,
       contactId: "",
       contactInfo: "",
+      contactFoodName: "",
       contactDisabled: true,
     };
   };
@@ -107,20 +108,32 @@ class MapScreen extends React.Component {
       this.setState({
         contactId: key,
         contactInfo: snapshot.val().contact,
+        contactFoodName: snapshot.val().name,
         contactDisabled: false,
       });
       console.log("setting marker", this.state.contactInfo);
     });
   };
-  initiateContact = number => {
+  emailProducer = (address, foodName) => {
     MailComposer.composeAsync({
-      recipients: ["amandamalmin@gmail.com"],
-      subject: "Hello from Urban Harvest",
-      body: "body message"
+      recipients: [address],
+      subject: "Urban Harvest: " + [foodName],
+      body: "Helper message"
     })
-    .then(status => {
-      console.log(status)
-    })
+      .then(status => {
+        console.log(status)
+      })
+  };
+  textProducer = (number, foodName) => {
+    const isAvailable = SMS.isAvailableAsync();
+    if (isAvailable) {
+      // do your SMS stuff here
+      SMS.sendSMSAsync(number, "Hello, I am interested in the " + foodName + " you listed on Urban Harvest. Where and when can I safely pick it up? Thank you!")
+    } else {
+      // misfortune... there's no SMS available on this device
+      console.log("no device detected")
+    }
+    
   };
   // async sendSMS(number) {
   //   const { result } = await SMS.sendSMSAsync([number], 'My sample HelloWorld message');
@@ -135,9 +148,9 @@ class MapScreen extends React.Component {
   //     // misfortune... there's no SMS available on this device
   //     console.log("no texting here")
   //   }
-    
+
   // };
-  
+
   render() {
     return (
       <View style={styles.container}>
@@ -153,6 +166,7 @@ class MapScreen extends React.Component {
             this.setState({
               contactId: "",
               contactInfo: "",
+              contactFoodName: "",
               contactDisabled: true,
             });
           }}
@@ -184,11 +198,11 @@ class MapScreen extends React.Component {
           />
           {/* contact producer button */}
           <MyButton
-            onPress={() => { this.initiateContact(this.state.contactInfo) }}
+            onPress={() => { this.textProducer(this.state.contactInfo, this.state.contactFoodName) }}
             iconName={"contact"}
             iconSize={30}
             iconColor={Colors.white}
-            buttonStyle={this.state.contactId?styles.producerButtonActive: styles.producerButtonInActive}
+            buttonStyle={this.state.contactId ? styles.producerButtonActive : styles.producerButtonInActive}
             textStyle={styles.buttonText}
             title={"Contact Producer"}
             disabled={this.state.contactDisabled}
