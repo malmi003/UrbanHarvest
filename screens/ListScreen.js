@@ -1,10 +1,13 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, TextInput, Button, Linking, Alert, } from 'react-native';
+import { ScrollView, Platform, StyleSheet, Text, View, TextInput, Linking, Alert, FlatList, } from 'react-native';
+import { Button } from "react-native-elements";
 import { ExpoLinksView } from '@expo/samples';
 import Colors from "../constants/Colors";
 import { withNavigation } from "react-navigation";
 import * as firebase from 'firebase';
-
+import { db } from "../src/config/db";
+import Icon from "../components/Icon";
+import Styles from "../constants/Styles";
 
 
 export default class ListScreen extends React.Component {
@@ -12,78 +15,103 @@ export default class ListScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPassword: "",
-      newPassword: "",
-      newEmail: "",
+      listArray: [],
     };
   }
+  pullFoods = () => {
+    db.ref("currentFood").on("value", snapshot => {
+      // grab the coords & hover data from each item in newFoods list
+      let listArray = [];
+      snapshot.forEach(item => {
+        let lat = parseFloat(item.val().lat);
+        let lng = parseFloat(item.val().lng);
+        let name = item.val().name;
+        let description = item.val().description;
+        let itemKey = item.key;
 
-  // Occurs when signOut is pressed...
-  onSignOutPress = () => {
-    firebase.auth().signOut();
-  }
+        // push each one into the marker array
+        listArray.push({
+          latlng: {
+            latitude: lat,
+            longitude: lng
+          },
+          title: name,
+          description: description,
+          key: itemKey,
+        })
+      });
+      this.setState({
+        listArray: listArray,
+      });
+    });
+  };
 
-  // Reauthenticates the current user and returns a promise...
-
-  reauthenticate = (currentPassword) => {
-    const user = firebase.auth().currentUser;
-    const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-    return user.reauthenticateAndRetrieveDataWithCredential(credential)
-  }
-
-  // Changes user's password...
-  onChangePasswordPress = () => {
-    this.reauthenticate(this.state.currentPassword).then(() => {
-      var user = firebase.auth().currentUser;
-      user.updatePassword(this.state.newPassword).then(() => {
-        Alert.alert("Password was changed");
-      }).catch((error) => { console.log(error.message); });
-    }).catch((error) => { console.log(error.message) });
-  }
-
-  // Changes user's email...
-  onChangeEmailPress = () => {
-    this.reauthenticate(this.state.currentPassword).then(() => {
-      var user = firebase.auth().currentUser;
-      user.updateEmail(this.state.newEmail).then(() => {
-        Alert.alert("Email was changed");
-      }).catch((error) => { console.log(error.message); });
-    }).catch((error) => { console.log(error.message) });
-  }
+  componentWillMount = () => {
+    this.pullFoods();
+    // this.getAndSetCurrentLocation();
+  };
 
   render() {
     return (
-      <ScrollView style={{ flex: 1, flexDirection: "column", paddingVertical: 50, paddingHorizontal: 10, }}>
-        <Button title="Sign out" onPress={this.onSignOutPress} />
-
-        <TextInput style={styles.textInput} value={this.state.currentPassword}
-          placeholder="Current Password" autoCapitalize="none" secureTextEntry={true}
-          onChangeText={(text) => { this.setState({ currentPassword: text }) }}
-        />
-
-        <TextInput style={styles.textInput} value={this.state.newPassword}
-          placeholder="New Password" autoCapitalize="none" secureTextEntry={true}
-          onChangeText={(text) => { this.setState({ newPassword: text }) }}
-        />
-
-        <Button title="Change Password" onPress={this.onChangePasswordPress} />
-
-        <TextInput style={styles.textInput} value={this.state.newEmail}
-          placeholder="New Email" autoCapitalize="none" keyboardType="email-address"
-          onChangeText={(text) => { this.setState({ newEmail: text }) }}
-        />
-
-        <Button title="Change Email" onPress={this.onChangeEmailPress} />
-
+      <ScrollView style={{ backgroundColor: Colors.white }}>
+        <View style={styles.headerContainer}>
+          <Text style={[Styles.title, {color: Colors.blue}]}>Food Postings Near You</Text>
+        </View>
+        <FlatList
+          data={this.state.listArray}
+          renderItem={({ item }) =>
+            <View style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              borderBottomWidth: 1,
+              borderBottomColor: Colors.lightGray,
+              marginTop: 10,
+              paddingBottom: 10,
+            }}>
+              <View>
+                <Text style={styles.listItemTitle}>{item.title}</Text>
+                <Text style={styles.listItemDesc}>{item.description}</Text>
+              </View>
+              <Button
+                onPress={() => console.log(contact)}
+                title="Contact Producer"
+                icon={{ name: 'ios-contact', type: "ionicon", size: 30, }}
+                backgroundColor={Colors.headerGreen}
+                fontSize={15}
+                rounded={true}
+                buttonStyle={{ marginBottom: 3, width: 200 }}
+                containerViewStyle={{ marginTop: 8 }}
+                raised={true}
+              />
+            </View>
+          }
+        >
+          {console.log("Listview State: ", this.state)}
+        </FlatList>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  text: { color: "white", fontWeight: "bold", textAlign: "center", fontSize: 20, },
-  textInput: { borderWidth: 1, borderColor: "gray", marginVertical: 20, padding: 10, height: 40, alignSelf: "stretch", fontSize: 18, },
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  listItemTitle: {
+    fontSize: 20,
+    paddingLeft: 40,
+  },
+  listItemDesc: {
+    fontSize: 15,
+    paddingLeft: 40,
+    marginBottom: 20,
+
+  },
 });
-
-
-// export default withNavigation(ListScreen);

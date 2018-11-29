@@ -142,7 +142,7 @@ class MyListScreen extends React.Component {
                                                     rounded={true}
                                                     buttonStyle={{ marginBottom: 3, width: 150 }}
                                                     containerViewStyle={{ marginTop: 8 }}
-                                                    raised= {true}
+                                                    raised={true}
                                                 />
                                                 {/* <Button
                                                     onPress={() => this.handleUpdate(item.key)}
@@ -161,7 +161,7 @@ class MyListScreen extends React.Component {
                                                     fontSize={20}
                                                     rounded={true}
                                                     containerViewStyle={{ marginBottom: 8 }}
-                                                    raised= {true}
+                                                    raised={true}
                                                 />
                                             </View>
                                         </View>}
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10,
-        paddingRight: 25,
+        paddingRight: 15,
     },
     listItemTitle: {
         fontSize: 20,

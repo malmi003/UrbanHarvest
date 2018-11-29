@@ -11,6 +11,7 @@ import {
   View,
   Button,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { MapView, SMS, MailComposer } from 'expo';
 import Colors from "../constants/Colors";
@@ -101,7 +102,7 @@ class MapScreen extends React.Component {
   };
   onRegionChange = region => {
     this.setState({ region });
-    console.log("State: ", this.state)
+    console.log("Mapview State: ", this.state)
   };
   setContactInformation = key => {
     db.ref("/currentFood/" + key).on("value", snapshot => {
@@ -115,10 +116,11 @@ class MapScreen extends React.Component {
     });
   };
   emailProducer = (address, foodName) => {
+    console.log(address, foodName)
     MailComposer.composeAsync({
       recipients: [address],
       subject: "Urban Harvest: " + [foodName],
-      body: "Helper message"
+      body: `Hello, \n\n I am interested the ${foodName} you posted on Urban Harvest. Where and when can I safely pick it up? \n\n Thank you!`
     })
       .then(status => {
         console.log(status)
@@ -131,25 +133,10 @@ class MapScreen extends React.Component {
       SMS.sendSMSAsync(number, "Hello, I am interested in the " + foodName + " you listed on Urban Harvest. Where and when can I safely pick it up? Thank you!")
     } else {
       // misfortune... there's no SMS available on this device
-      console.log("no device detected")
+      Alert.alert("Unable to contact Producer without SMS available");
+      console.log("no device detected");
     }
-    
   };
-  // async sendSMS(number) {
-  //   const { result } = await SMS.sendSMSAsync([number], 'My sample HelloWorld message');
-  // };
-  // handleSendSMS = (number) => {
-  //   const isAvailable =  await SMS.isAvailableAsync();
-  //   if (isAvailable) {
-  //     // do your SMS stuff here
-  //     console.log("you can text!")
-  //     // this.sendSMS(number);
-  //   } else {
-  //     // misfortune... there's no SMS available on this device
-  //     console.log("no texting here")
-  //   }
-
-  // };
 
   render() {
     return (
@@ -198,13 +185,13 @@ class MapScreen extends React.Component {
           />
           {/* contact producer button */}
           <MyButton
-            onPress={() => { this.textProducer(this.state.contactInfo, this.state.contactFoodName) }}
+            onPress={() => { this.emailProducer(this.state.contactInfo, this.state.contactFoodName) }}
             iconName={"contact"}
             iconSize={30}
             iconColor={Colors.white}
             buttonStyle={this.state.contactId ? styles.producerButtonActive : styles.producerButtonInActive}
             textStyle={styles.buttonText}
-            title={"Contact Producer"}
+            title={" Contact Producer"}
             disabled={this.state.contactDisabled}
           />
           <MyButton
