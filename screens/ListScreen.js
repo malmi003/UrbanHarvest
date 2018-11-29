@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import { db } from "../src/config/db";
 import Icon from "../components/Icon";
 import Styles from "../constants/Styles";
+import { MapView, SMS, MailComposer } from 'expo';
 
 
 export default class ListScreen extends React.Component {
@@ -28,6 +29,7 @@ export default class ListScreen extends React.Component {
         let name = item.val().name;
         let description = item.val().description;
         let itemKey = item.key;
+        let contact = item.val().contact;
 
         // push each one into the marker array
         listArray.push({
@@ -38,6 +40,7 @@ export default class ListScreen extends React.Component {
           title: name,
           description: description,
           key: itemKey,
+          contact: contact,
         })
       });
       this.setState({
@@ -45,7 +48,17 @@ export default class ListScreen extends React.Component {
       });
     });
   };
-
+  textProducer = (number, foodName) => {
+    const isAvailable = SMS.isAvailableAsync();
+    if (isAvailable) {
+      // do your SMS stuff here
+      SMS.sendSMSAsync(number, "Hello, I am interested in the " + foodName + " you listed on Urban Harvest. Where and when can I safely pick it up? Thank you!")
+    } else {
+      // misfortune... there's no SMS available on this device
+      Alert.alert("Unable to contact Producer without SMS available");
+      console.log("no device detected");
+    }
+  };
   componentWillMount = () => {
     this.pullFoods();
     // this.getAndSetCurrentLocation();
@@ -73,7 +86,7 @@ export default class ListScreen extends React.Component {
                 <Text style={styles.listItemDesc}>{item.description}</Text>
               </View>
               <Button
-                onPress={() => console.log(contact)}
+                onPress={() => this.textProducer(item.contact, item.title)}
                 title="Contact Producer"
                 icon={{ name: 'ios-contact', type: "ionicon", size: 30, }}
                 backgroundColor={Colors.headerGreen}
