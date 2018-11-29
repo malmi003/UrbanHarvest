@@ -12,6 +12,12 @@ import Colors from "../../constants/Colors";
 
 export default class UserSettings extends React.Component {
 
+    static navigationOptions = {
+        drawerIcon: ({tintColor}) => (
+            <Icon name="ios-settings" color={tintColor}/>
+        )
+    };
+
     constructor(props) {
         super(props);
         this.state = {

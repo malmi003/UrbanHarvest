@@ -25,6 +25,7 @@ import Styles from "../constants/Styles";
 import { MailComposer } from 'expo';
 
 class ReportScreen extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -69,64 +70,68 @@ class ReportScreen extends React.Component {
                         onRequestClose={() => {
                             this.setModalVisible(false)
                         }}>
-                        <KeyboardAvoidingView behavior="padding" enabled>
-                            <ScrollView>
-                                <View style={styles.headerContainer}>
-                                    <MyIcon
-                                        name={
-                                            Platform.OS === 'ios'
-                                                ? (`ios-close`)
-                                                : (`md-close`)
-                                        }
-                                        onPress={() => { this.setModalVisible(false) }}
-                                        size={50}
-                                        style={{ paddingLeft: 20 }}
-                                    />
-                                    <Text style={[Styles.title]}>Report</Text>
-                                    {/* dummy component to center header elements correctly */}
-                                    <Text style={{ paddingRight: 30 }}></Text>
+                        <ScrollView>
+                            <KeyboardAvoidingView behavior="padding" enabled>
+
+                                <View style={{flex:1,}}>
+                                    <View style={styles.headerContainer}>
+                                        <MyIcon
+                                            name={
+                                                Platform.OS === 'ios'
+                                                    ? (`ios-close`)
+                                                    : (`md-close`)
+                                            }
+                                            onPress={() => { this.setModalVisible(false) }}
+                                            size={50}
+                                            style={{ paddingLeft: 20 }}
+                                        />
+                                        <Text style={[Styles.title]}>Report</Text>
+                                        {/* dummy component to center header elements correctly */}
+                                        <Text style={{ paddingRight: 30 }}></Text>
+                                    </View>
+                                    <View style={styles.reportContainer}>
+                                        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", paddingTop: 10, paddingBottom: 10, color: Colors.darkGray }}>Post ID</Text>
+                                        <TextInput
+                                            style={[styles.inputField, { height: 40 }]}
+                                            value={
+                                                this.props.contactKey !== ""
+                                                    ? this.props.contactKey
+                                                    : this.state.reportPost
+                                            }
+                                            onChangeText={text => {
+                                                this.props.contactKey
+                                                    ? ""
+                                                    : this.setState({ reportPost: text })
+                                            }}
+                                            placeholder={
+                                                this.props.contactKey !== ""
+                                                    ? ""
+                                                    : "...select pin from map for id"
+                                            }
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+                                        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", paddingTop: 10, paddingBottom: 10, color: Colors.darkGray }}>Message</Text>
+                                        <TextInput
+                                            style={[styles.inputField, { height: 60, marginBottom: 8, }]}
+                                            value={this.state.reportMessage}
+                                            onChangeText={reportMessage => this.setState({ reportMessage })}
+                                            placeholder={"enter message..."}
+                                            multiline={true}
+                                            editable={true}
+                                            numberOfLines={15}
+                                        />
+                                        <Button
+                                            title="Send Email"
+                                            onPress={() => this.sendReport()}
+                                            buttonStyle={[Styles.plainButton, {marginTop:50}]}
+                                            raised={true}
+                                            containerViewStyle={{ paddingBottom: 10, }}
+                                        />
+                                    </View>
                                 </View>
-                                <View style={styles.reportContainer}>
-                                    <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", paddingTop: 10, paddingBottom: 10 }}>Post ID</Text>
-                                    <TextInput
-                                        style={[styles.inputField, { height: 40 }]}
-                                        value={
-                                            this.props.contactKey !== ""
-                                                ? this.props.contactKey
-                                                : this.state.reportPost
-                                        }
-                                        onChangeText={text => {
-                                            this.props.contactKey
-                                                ? ""
-                                                : this.setState({ reportPost: text })
-                                        }}
-                                        placeholder={
-                                            this.props.contactKey !== ""
-                                                ? ""
-                                                : "...select pin from map for id"
-                                        }
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                    />
-                                    <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", paddingTop: 10, paddingBottom: 10 }}>Message</Text>
-                                    <TextInput
-                                        style={[styles.inputField, { height: 60, marginBottom: 8, }]}
-                                        value={this.state.reportMessage}
-                                        onChangeText={reportMessage => this.setState({ reportMessage })}
-                                        placeholder={"enter message..."}
-                                        multiline={true}
-                                        editable={true}
-                                        numberOfLines={15}
-                                    />
-                                    <Button
-                                        title="Send Email"
-                                        onPress={() => this.sendReport()}
-                                        buttonStyle={[Styles.plainButton, { width: "100%" }]}
-                                        raised={true}
-                                    />
-                                </View>
-                            </ScrollView>
-                        </KeyboardAvoidingView>
+                            </KeyboardAvoidingView>
+                        </ScrollView>
                     </Modal>
                 </View>
                 {/* Produce Food Button that opens modal */}
@@ -163,10 +168,11 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     reportContainer: {
-        flex: 1,
+        flex: 2,
         marginHorizontal: 10,
         backgroundColor: Colors.headerGreen,
         // flexDirection: 'row',
+
         alignItems: "center",
         // textAlign: "center",
     },

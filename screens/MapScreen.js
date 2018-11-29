@@ -14,6 +14,7 @@ import {
   Alert,
 } from 'react-native';
 import { MapView, SMS, MailComposer } from 'expo';
+import Icon from "../components/Icon";
 import Input from "../components/Input";
 import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
@@ -25,6 +26,7 @@ const { width, height } = Dimensions.get('window');
 
 
 class MapScreen extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -177,8 +179,8 @@ class MapScreen extends React.Component {
           ))}
         </MapView>
         <View style={styles.mapButtonContainer}>
-          <View style={{flexDirection:"row", justifyContent:"space-around"}}>
-            <ReportScreen 
+          <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+            <ReportScreen
               contactKey={this.state.contactId}
             />
 
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     // textShadowColor: 'rgba(0, 0, 0, 0.5)',
     // textShadowOffset: {width: -1, height: 1},
     // textShadowRadius: 2
-    width:60,
+    width: 60,
     textAlign: "center"
   },
   leftMapIcon: {

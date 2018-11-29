@@ -9,6 +9,7 @@ import ProduceModalScreen from "../screens/ProduceModalScreen";
 import Colors from "../constants/Colors";
 import Icon from "../components/Icon";
 import MyListScreen from "../screens/MyList";
+import GenericReportScreen from "../screens/mainMenu/GenericReportScreen";
 
 
 class LogoTitle extends React.Component {
@@ -70,7 +71,7 @@ class HeaderViewToggleBtn extends React.Component {
 const CustomDrawerContentComponent = props => (
   <ScrollView>
     <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
-      <View style={{alignItems:"center"}}>
+      <View style={{ alignItems: "center" }}>
         <LogoTitle />
       </View>
       <DrawerItems {...props} />
@@ -92,7 +93,6 @@ const headerToggleStack = createStackNavigator(
             nav1={() => navigation.navigate("Map")}
             nav2={() => navigation.navigate("List")}
           />,
-
       })
     },
     List: {
@@ -122,16 +122,15 @@ const headerToggleStack = createStackNavigator(
       headerLeft: () => (
         <DrawerButton navigation={navigation} />
       ),
-      headerRight: <MyListScreen />
-
+      headerRight: <MyListScreen />,
     }),
   }
 );
 export default LeftDrawerNavigator = createDrawerNavigator(
   {
     "Find Food": { screen: headerToggleStack },
-    // place the rest of the stacks here!
-    UserSettings: { screen: UserSettingsScreen },
+    "Settings": { screen: UserSettingsScreen },
+    "Contact Customer Service": { screen: GenericReportScreen },
   },
   {
     drawerPosition: "left",
@@ -139,6 +138,13 @@ export default LeftDrawerNavigator = createDrawerNavigator(
     drawerBackgroundColor: Colors.headerGreen,
     drawerWidth: 300,
     contentComponent: CustomDrawerContentComponent,
+    contentOptions: {
+      labelStyle: {
+        color: Colors.white,
+      },
+      activeTintColor: Colors.tintColor,
+      activeBackgroundColor: "none",
+    },
   }
 );
 
