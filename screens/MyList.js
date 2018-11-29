@@ -53,11 +53,11 @@ class MyListScreen extends React.Component {
         // first go get that item from the DB
         db.ref("/currentFood/" + key).once("value")
             .then(snapshot => {
-                let deletedItem = snapshot.val();
+                let harvestedItem = snapshot.val();
                 // and add it to the harvested foods list ( ** need to separate out functions of simply remove and harvest)
-                console.log("deleted item: ", deletedItem)
+                console.log("harvested item: ", harvestedItem)
                 // add it to their harvestedFoods
-                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/harvestedFood/" + key).push(deletedItem)
+                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/harvestedFood/" + key).push(harvestedItem)
                 // remove from the current food list
                 db.ref("/currentFood/" + key).remove();
                 // remove it from their current food list
@@ -71,10 +71,16 @@ class MyListScreen extends React.Component {
                 { text: "Cancel", style: "cancel" },
                 {
                     text: "Delete", onPress: () => {
-                        // remove from the current food list
-                        db.ref("/currentFood/" + key).remove();
-                        // remove it from their current food list
-                        db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+                        db.ref("/currentFood/" + key).once("value")
+                            .then(snapshot => {
+                                let deletedItem = snapshot.val();
+                                console.log("deleted item: ", deletedItem)
+                                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/deletedFood/" + key).push(deletedItem)
+                                // remove from the current food list
+                                db.ref("/currentFood/" + key).remove();
+                                // remove it from their current food list
+                                db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+                            });
                     }
                 }
             ]);
@@ -121,6 +127,7 @@ class MyListScreen extends React.Component {
                                     data={this.state.myFoodsArray}
                                     renderItem={({ item }) =>
                                         <View style={{
+                                            flex:1,
                                             flexDirection: "row",
                                             justifyContent: 'space-between',
                                             marginTop: 10,
@@ -129,18 +136,18 @@ class MyListScreen extends React.Component {
                                             // borderTopWidth: 1
                                         }}
                                         >
-                                            <View>
+                                            <View style={{flex:3}}> 
                                                 <Text style={styles.listItemTitle}>{item.name}</Text>
                                                 <Text style={styles.listItemDesc}>{item.description}</Text>
                                             </View>
-                                            <View>
+                                            <View style={{flex:2}}>
                                                 <Button
                                                     onPress={() => this.handleHarvest(item.key)}
                                                     title="harvest"
                                                     backgroundColor={Colors.headerGreen}
                                                     fontSize={20}
                                                     rounded={true}
-                                                    buttonStyle={{ marginBottom: 3, width: 150 }}
+                                                    buttonStyle={{ marginBottom: 3 }}
                                                     containerViewStyle={{ marginTop: 8 }}
                                                     raised={true}
                                                 />
@@ -207,9 +214,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.headerGreen,
         color: Colors.white,
         fontSize: 20,
-        // width: 80,
-        // flexWrap: "wrap",
-        // height: 44,
         textAlign: "center",
         transform: [{ skewX: '-10deg' }],
         marginRight: 5,

@@ -68,12 +68,13 @@ export default class ListScreen extends React.Component {
     return (
       <ScrollView style={{ backgroundColor: Colors.white }}>
         <View style={styles.headerContainer}>
-          <Text style={[Styles.title, {color: Colors.blue}]}>Food Postings Near You</Text>
+          <Text style={[Styles.title, { color: Colors.blue }]}>Food Postings Near You</Text>
         </View>
         <FlatList
           data={this.state.listArray}
           renderItem={({ item }) =>
             <View style={{
+              flex: 1,
               flexDirection: "row",
               justifyContent: "space-between",
               borderBottomWidth: 1,
@@ -81,7 +82,7 @@ export default class ListScreen extends React.Component {
               marginTop: 10,
               paddingBottom: 10,
             }}>
-              <View>
+              <View style={{ overflowWrap: "break-word", flex: 3, }}>
                 <Text style={styles.listItemTitle}>{item.title}</Text>
                 <Text style={styles.listItemDesc}>{item.description}</Text>
               </View>
@@ -92,8 +93,8 @@ export default class ListScreen extends React.Component {
                 backgroundColor={Colors.headerGreen}
                 fontSize={15}
                 rounded={true}
-                buttonStyle={{ marginBottom: 3, width: 200 }}
-                containerViewStyle={{ marginTop: 8 }}
+                buttonStyle={{ marginBottom: 3 }}
+                containerViewStyle={{ marginTop: 8, marginLeft: 1, flex: 2, }}
                 raised={true}
               />
             </View>
@@ -119,11 +120,11 @@ const styles = StyleSheet.create({
   },
   listItemTitle: {
     fontSize: 20,
-    paddingLeft: 40,
+    paddingLeft: 20,
   },
   listItemDesc: {
     fontSize: 15,
-    paddingLeft: 40,
+    paddingLeft: 25,
     marginBottom: 20,
 
   },

@@ -14,10 +14,12 @@ import {
   Alert,
 } from 'react-native';
 import { MapView, SMS, MailComposer } from 'expo';
+import Input from "../components/Input";
 import Colors from "../constants/Colors";
 import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
 import MyButton from "../components/Button";
+import ReportScreen from "../screens/ReportScreen";
 const { Marker, Callout } = MapView;
 const { width, height } = Dimensions.get('window');
 
@@ -112,7 +114,6 @@ class MapScreen extends React.Component {
         contactFoodName: snapshot.val().name,
         contactDisabled: false,
       });
-      console.log("setting marker", this.state.contactInfo);
     });
   };
   emailProducer = (address, foodName) => {
@@ -176,13 +177,19 @@ class MapScreen extends React.Component {
           ))}
         </MapView>
         <View style={styles.mapButtonContainer}>
-          <MyButton
-            onPress={() => this.pullFoods()}
-            iconName={"refresh"}
-            iconSize={30}
-            iconStyle={styles.leftMapIcon}
-            iconColor={Colors.headerGreen}
-          />
+          <View style={{flexDirection:"row", justifyContent:"space-around"}}>
+            <ReportScreen 
+              contactKey={this.state.contactId}
+            />
+
+            <MyButton
+              onPress={() => this.pullFoods()}
+              iconName={"refresh"}
+              iconSize={30}
+              iconStyle={styles.leftMapIcon}
+              iconColor={Colors.headerGreen}
+            />
+          </View>
           {/* contact producer button */}
           <MyButton
             onPress={() => { this.emailProducer(this.state.contactInfo, this.state.contactFoodName) }}
@@ -226,7 +233,8 @@ const styles = StyleSheet.create({
     // textShadowColor: 'rgba(0, 0, 0, 0.5)',
     // textShadowOffset: {width: -1, height: 1},
     // textShadowRadius: 2
-
+    width:60,
+    textAlign: "center"
   },
   leftMapIcon: {
   },

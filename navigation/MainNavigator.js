@@ -132,8 +132,6 @@ export default LeftDrawerNavigator = createDrawerNavigator(
     "Find Food": { screen: headerToggleStack },
     // place the rest of the stacks here!
     UserSettings: { screen: UserSettingsScreen },
-    UserSettings2: { screen: UserSettingsScreen },
-    ProduceModal: {screen: ProduceModalScreen},
   },
   {
     drawerPosition: "left",
