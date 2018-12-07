@@ -69,7 +69,11 @@ class MyListScreen extends React.Component {
                                 // remove it from their current food list
                                 db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
                                 // remove it from geoFire
-                                geoFire.remove(key);
+                                geoFire.remove(key).then(function() {
+                                    console.log("Provided key has been removed from GeoFire");
+                                  }, function(error) {
+                                    console.log("Error: " + error);
+                                  });
                             });
                     }
                 }
@@ -92,7 +96,11 @@ class MyListScreen extends React.Component {
                                 // remove it from their current food list
                                 db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
                                 // remove it from geoFire
-                                geoFire.remove(key);
+                                geoFire.remove(key).then(function() {
+                                    console.log("Provided key has been removed from GeoFire");
+                                  }, function(error) {
+                                    console.log("Error: " + error);
+                                  });
                             });
                     }
                 }

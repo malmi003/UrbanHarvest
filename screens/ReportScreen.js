@@ -15,6 +15,7 @@ import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import { Button, Icon } from "react-native-elements";
+import MyButton from "../components/Button";
 import MyIcon from "../components/Icon";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -73,7 +74,7 @@ class ReportScreen extends React.Component {
                         <ScrollView>
                             <KeyboardAvoidingView behavior="padding" enabled>
 
-                                <View style={{flex:1,}}>
+                                <View style={{ flex: 1, }}>
                                     <View style={styles.headerContainer}>
                                         <MyIcon
                                             name={
@@ -124,7 +125,7 @@ class ReportScreen extends React.Component {
                                         <Button
                                             title="Send Email"
                                             onPress={() => this.sendReport()}
-                                            buttonStyle={[Styles.plainButton, {marginTop:50}]}
+                                            buttonStyle={[Styles.plainButton, { marginTop: 50 }]}
                                             raised={true}
                                             containerViewStyle={{ paddingBottom: 10, }}
                                         />
@@ -139,16 +140,13 @@ class ReportScreen extends React.Component {
                     flex: 1,
                     marginRight: 20
                 }}>
-                    <Icon
-                        onPress={() => {
-                            this.setModalVisible(true);
-                        }}
-                        name="ios-alert"
-                        size={30}
-                        type="ionicon"
-                        color={Colors.headerGreen}
-                        iconStyle={styles.reportIcon}
-                        containerStyle={styles.iconContainer}
+                    <MyButton
+                        onPress={() => this.setModalVisible(true)}
+                        title="Report"
+                        iconName={"alert"}
+                        iconSize={30}
+                        iconStyle={styles.leftMapIcon}
+                        iconColor={Colors.headerGreen}
                     />
                 </View>
             </View>

@@ -34,9 +34,6 @@ class ProduceModalScreen extends React.Component {
     };
   };
 
-
-
-
   setModalVisible(visible) {
         this.setState({ modalVisible: visible });
       }
@@ -47,6 +44,7 @@ class ProduceModalScreen extends React.Component {
         return fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.address},${values.city},${values.state}${values.zip}&key=${GOOGLE_API_KEY}`)
 
           .then(response => {
+            console.log(response)
             let parsedRes = JSON.parse(response["_bodyInit"]);
             let addFoodPacket = {
               userId: firebase.auth().currentUser.uid,
@@ -56,7 +54,7 @@ class ProduceModalScreen extends React.Component {
               region: parsedRes.results[0].address_components[2].long_name,
               description: values.description,
               category: values.category,
-              contact: values.contact,
+              email: values.email,
               // needs to be object w/ location.latitude
               // region2: Expo.Location.reverseGeocodeAsync(values.lat, values.lng),
             };
@@ -84,7 +82,7 @@ class ProduceModalScreen extends React.Component {
             <KeyboardAvoidingView behavior="padding" enabled>
               <ScrollView>
                 <Formik
-                  initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", contact: "", }}
+                  initialValues={{ description: "", name: "", category: "", address: "", city: "", state: "", zip: "", email: "", }}
                   onSubmit={this.handleSubmit}
                   validationSchema={Yup.object().shape({
                     name: Yup.string().trim().required(),
@@ -94,7 +92,7 @@ class ProduceModalScreen extends React.Component {
                     city: Yup.string().trim().required(),
                     state: Yup.string().trim().required(),
                     zip: Yup.number().min(501, "Enter a valid zip").max(99950, "Enter a valid zip").required(),
-                    contact: Yup.string().trim().required(),
+                    email: Yup.string().email().required()
                   })}
                   render={({ values, handleSubmit, setFieldValue, errors, touched, setFieldTouched, isValid, isSubmitting }) => (
                     <React.Fragment>
@@ -182,14 +180,15 @@ class ProduceModalScreen extends React.Component {
                       />
                       {/* make this email or a phone number to text */}
                       <Input
-                        label="Contact Info"
+                        label="Contact Email"
                         labelStyle={{ color: Colors.darkGray }}
-                        placeholder="preferred contact information"
-                        value={values.contact}
+                        placeholder="email"
+                        value={values.email}
                         onChange={setFieldValue}
                         onTouch={setFieldTouched}
-                        name="contact"
-                        error={touched.contact && errors.contact}
+                        name="email"
+                        error={touched.email && errors.email}
+                        keyboardType="email-address"
                         returnKeyType="done"
                       />
                       <Button

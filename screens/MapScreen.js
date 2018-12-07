@@ -22,12 +22,9 @@ import { withNavigation } from "react-navigation";
 import MyButton from "../components/Button";
 import ReportScreen from "../screens/ReportScreen";
 const { Marker, Callout, } = MapView;
-const { width, height } = Dimensions.get('window');
 
 import GeoFire from 'geofire';
 const geoFire = new GeoFire(db.ref("/geoFire/"));
-const geoRef = geoFire.ref();
-// set the geoQuery confines
 
 class MapScreen extends React.Component {
 
@@ -40,74 +37,45 @@ class MapScreen extends React.Component {
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       },
-      markerKeyArray: [],
       markerArray: [],
       modalVisible: false,
-      contactId: "",
-      contactInfo: "",
-      contactFoodName: "",
-      contactDisabled: true,
+      // contactId: "",
+      // contactInfo: "",
+      // contactFoodName: "",
+      // contactDisabled: true,
     };
   };
-  // figure out the bounds of the screen (upper&lower lat& long)
-  //map through the data to figure out if the given lat&lngs are within that range
-  // pull all the pins from db, filter through them, create markers for each of those...
-
-  pullFoods = () => {
-    db.ref("currentFood").on("value", snapshot => {
-      // grab the coords & hover data from each item in newFoods list
-      let markerArray = [];
-      snapshot.forEach(item => {
-        let lat = parseFloat(item.val().lat);
-        let lng = parseFloat(item.val().lng);
-        let name = item.val().name;
-        let description = item.val().description;
-        let itemKey = item.key;
-
-        // push each one into the marker array
+  callGeoFire = () => {
+    let markerArray = [];
+    geoFire.query({
+      center: [this.state.region.latitude, this.state.region.longitude],
+      radius: 4
+    }).on("key_entered", (key, location, distance) => {
+      // then it will run pull relevant foods for each one (this gets run each tsime a matching key is found in DB)
+      db.ref("currentFood/" + key).on("value", snapshot => {
+        // grab the coords & hover data from each item in newFoods list and push each one into the marker array
+        console.log("snapshot", snapshot)
         markerArray.push({
           latlng: {
-            latitude: lat,
-            longitude: lng
+            latitude: parseFloat(snapshot.val().lat),
+            longitude: parseFloat(snapshot.val().lng)
           },
-          title: name,
-          description: description,
-          key: itemKey,
+          title: snapshot.val().name,
+          description: snapshot.val().description,
+          key: snapshot.key,
+          contactInfo: snapshot.val().contact,
         })
       });
       this.setState({
         markerArray: markerArray,
       });
     });
-  };
-  pullRelevantFoods = (key, array) => {
-    db.ref("currentFood/" + key).on("value", snapshot => {
-      // grab the coords & hover data from each item in newFoods list
-        let lat = parseFloat(snapshot.val().lat);
-        let lng = parseFloat(snapshot.val().lng);
-        let name = snapshot.val().name;
-        let description = snapshot.val().description;
-        let itemKey = snapshot.key;
-
-        // push each one into the marker array
-        array.push({
-          latlng: {
-            latitude: lat,
-            longitude: lng
-          },
-          title: name,
-          description: description,
-          key: itemKey,
-        })
-      });
-      this.setState({
-        markerArray: array,
-    });
+    markerArray = [];
   };
   getAndSetCurrentLocation = () => {
     const options = {
       enableHighAccuracy: true,
-      timeout: 5000,
+      timeout: 3000,
       maximumAge: 0
     };
     const success = pos => {
@@ -131,119 +99,22 @@ class MapScreen extends React.Component {
     navigator.geolocation.getCurrentPosition(success, error, options);
   };
   componentWillMount = () => {
-    console.log("mounting state: ", this.state.region)
     this.getAndSetCurrentLocation();
-    // this.pullFoods();
-    // this.onEnter();
-    // this.onExit();
+
+  };
+  componentDidMount = () => {
+    // below will create a geoFire query to pull all the keys in the given region
+    this.callGeoFire();
   };
 
-  geoQuery = () => geoFire.query({
-    center: [this.state.region.latitude, this.state.region.longitude],
-    // center: [45.986656, -93.258133],
-
-    radius: 5
-  });
-  onExit = () => {
-    let markerKeyArray = this.state.markerKeyArray;
-    // console.log("GONE: ", markerKeyArray)
-    this.geoQuery().on("key_exited", (key, location, distance) => {
-      console.log("GONE: ", markerKeyArray)
-      // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
-
-      if (markerKeyArray.indexOf(key) !== -1) {
-        markerKeyArray.splice(markerKeyArray.indexOf(key), 1);
-      };
-      this.setState({ markerKeyArray: markerKeyArray });
-
-    });
-  };
-  onEnter = () => {
-    let markerKeyArray = this.state.markerKeyArray;
-    this.geoQuery().on("key_entered", (key, location, distance) => {
-      // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
-
-      if (markerKeyArray.indexOf(key) === -1) {
-        markerKeyArray.push(key);
-      };
-      this.setState({ markerKeyArray: markerKeyArray });
-      console.log("MARKERS: ", markerKeyArray)
-    });
-  };
-
+  //only updating region after the map scroll has been complete to avoid "glitchy" map 
   onRegionChangeComplete = region => {
+    // update the region
     this.setState({ region });
-    // this.geoQuery().updateCriteria({
-    //   center: [parseInt(this.state.region.latitude), parseInt(this.state.region.longitude)],
-    // });
-    // let markerKeyArray = this.state.markerKeyArray;
-    // console.log("region", region)
-
-    // this.geoQuery().on("key_exited", (key, location, distance) => {
-    //   console.log("GONE: ", markerKeyArray)
-    //   // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
-
-    //   if (markerKeyArray.indexOf(key) !== -1) {
-    //     markerKeyArray.splice(markerKeyArray.indexOf(key), 1);
-    //   };
-    //   this.setState({ markerKeyArray: markerKeyArray });
-
-    // });
-    // this.geoQuery().on("key_entered", (key, location, distance) => {
-    //   // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
-
-    //   if (markerKeyArray.indexOf(key) === -1) {
-    //     markerKeyArray.push(key);
-    //   };
-    //   this.setState({ markerKeyArray: markerKeyArray });
-    //   console.log("MARKERS: ", markerKeyArray)
-    // });
-    let markerArray = [];
-// so the issue here is it's being set to new coords centering on the map whenever the map moves which means keys go in but they never come out....
-// render straight away and each time map moves - call onmount and reset on change...
-// figure out how to set static initial center/radius and update based on when map moves then the keys should be able to come in and out....
-    geoFire.query({
-      center: [this.state.region.latitude, this.state.region.longitude],
-      radius: 4
-    }).on("key_entered", (key, location, distance) => {
-
-      console.log("key: ", key)
-      this.pullRelevantFoods(key, markerArray);
-
-      // if (markerKeyArray.indexOf(key) === -1) {
-      //   markerKeyArray.push(key);
-      // };
-      // this.setState({ markerKeyArray: markerKeyArray });
-      // console.log("MARKERS: ", markerKeyArray)
-    });
-
-    // geoFire.query({
-    //   center: [this.state.region.latitude, this.state.region.longitude],
-    //   radius: 5
-    // }).on("key_exited", (key, location, distance) => {
-    //   console.log("GONE: ", markerArray)
-    //   if (markerKeyArray.indexOf(key) !== -1) {
-    //     markerKeyArray.splice(markerArray.indexOf(key), 1);
-    //   };
-    //   this.setState({ markerKeyArray: markerArray });
-
-    // });
-
-
-    // this.onEnter()
-    // this.onExit();
+    // below will create a geoFire query to pull all the keys in the given region
+    this.callGeoFire();
   };
 
-  setContactInformation = key => {
-    db.ref("/currentFood/" + key).on("value", snapshot => {
-      this.setState({
-        contactId: key,
-        contactInfo: snapshot.val().contact,
-        contactFoodName: snapshot.val().name,
-        contactDisabled: false,
-      });
-    });
-  };
   emailProducer = (address, foodName) => {
     console.log(address, foodName)
     MailComposer.composeAsync({
@@ -266,6 +137,17 @@ class MapScreen extends React.Component {
       console.log("no device detected");
     }
   };
+
+  sendReport = (contactKey) => {
+    MailComposer.composeAsync({
+      recipients: ["info@urbanharvest.com"],
+      subject: `Urban Harvest Report: ${contactKey}`,
+      body: `Hello, \n\n I would like to report the following issue: \n\n  \n\n Thank you,`
+    })
+      .then(status => {
+        console.log(status)
+      })
+  };
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
   };
@@ -274,67 +156,62 @@ class MapScreen extends React.Component {
     return (
       <View style={styles.container}>
         <MapView
-          // ref={(el) => (this.map = el)}
           style={{ flex: 1 }}
-          // initialRegion={this.getAndSetCurrentLocation()}
+          // initialRegion={this.state.region}
           region={this.state.region}
           onRegionChangeComplete={this.onRegionChangeComplete}
           showsUserLocation={true}
-          // showsMyLocationButton={true}
+          showsMyLocationButton={true}
           loadingEnabled={true}
-          provider={MapView.PROVIDER_GOOGLE}
-          // reset the marker state on deselect
-          onMarkerDeselect={() => {
-            this.setState({
-              contactId: "",
-              contactInfo: "",
-              contactFoodName: "",
-              contactDisabled: true,
-            });
-          }}
+        // provider={MapView.PROVIDER_GOOGLE}
         >
+          {/* {console.log(this.state.markerArray)} */}
           {this.state.markerArray.map(marker => (
             <Marker
               coordinate={marker.latlng}
-              title={marker.title}
-              description={marker.description}
+              // title={marker.title}
+              // description={marker.description}
               image={require("../assets/images/broccoli.png")}
               key={marker.key}
-              onPress={e => this.setContactInformation(e._targetInst.return.key)}
+
             >
-              {/* <Callout>
-                <Text style={{fontSize:20,}}>{marker.title}</Text>
-                <Text>{marker.description}</Text>
-                {/*  ** add image of food here */}
-              {/* </Callout> */}
+              <Callout>
+                <Text style={{ fontSize: 20, textAlign: "center" }}>{marker.title}</Text>
+                <Text style={{ textAlign: "center" }}>{marker.description}</Text>
+                <MyButton
+                  onPress={() => { this.emailProducer(marker.contactInfo, marker.title); console.log(marker) }}
+                  iconName={"contact"}
+                  iconSize={30}
+                  iconColor={Colors.white}
+                  buttonStyle={styles.producerButtonActive}
+                  textStyle={styles.buttonText}
+                  title={" Contact Producer"}
+                />
+                  <MyButton
+                        onPress={() => this.sendReport(marker.key)}
+                        title="Report"
+                        iconName={"alert"}
+                        iconSize={30}
+                        iconStyle={styles.leftMapIcon}
+                        iconColor={Colors.headerGreen}
+                        buttonStyle={{flexDirection:"row", justifyContent: "center", alignItems:"center", marginTop:20}}
+                    />
+              </Callout>
             </Marker>
           ))}
         </MapView>
         <View style={styles.mapButtonContainer}>
-          <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-            <ReportScreen
-              contactKey={this.state.contactId}
-            />
-            {console.log("geofire marker array: ", this.state.markerKeyArray)}
-            <MyButton
-              onPress={() => this.pullFoods()}
-              iconName={"refresh"}
-              iconSize={30}
-              iconStyle={styles.leftMapIcon}
-              iconColor={Colors.headerGreen}
-            />
-          </View>
-          {/* contact producer button */}
+          {/* <View style={{ flexDirection: "row", justifyContent: "space-around" }}> */}
+
           <MyButton
-            onPress={() => { this.emailProducer(this.state.contactInfo, this.state.contactFoodName) }}
-            iconName={"contact"}
+            onPress={() => this.pullFoods()}
+            iconName={"refresh"}
             iconSize={30}
-            iconColor={Colors.white}
-            buttonStyle={this.state.contactId ? styles.producerButtonActive : styles.producerButtonInActive}
-            textStyle={styles.buttonText}
-            title={" Contact Producer"}
-            disabled={this.state.contactDisabled}
+            iconStyle={styles.leftMapIcon}
+            iconColor={Colors.headerGreen}
           />
+          {/* </View> */}
+          {/* contact producer button */}
           <MyButton
             onPress={() => { this.getAndSetCurrentLocation() }}
             iconName={"locate"}
@@ -357,22 +234,20 @@ const styles = StyleSheet.create({
   mapButtonContainer: {
     // flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginTop: 0,
     padding: 8,
-    alignItems: "flex-end",
+    alignItems: "center",
     backgroundColor: Colors.lightGreen,
   },
   rightMapIcon: {
-    // textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    // textShadowOffset: {width: -1, height: 1},
-    // textShadowRadius: 2
-    width: 60,
-    textAlign: "center"
+    padding: 2,
   },
   leftMapIcon: {
+    padding: 2,
   },
   producerButtonActive: {
+    marginTop:8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

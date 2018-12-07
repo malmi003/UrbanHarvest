@@ -29,7 +29,7 @@ export default class ListScreen extends React.Component {
         let name = item.val().name;
         let description = item.val().description;
         let itemKey = item.key;
-        let contact = item.val().contact;
+        let email = item.val().email;
 
         // push each one into the marker array
         listArray.push({
@@ -40,7 +40,7 @@ export default class ListScreen extends React.Component {
           title: name,
           description: description,
           key: itemKey,
-          contact: contact,
+          email: email,
         })
       });
       this.setState({
@@ -87,7 +87,7 @@ export default class ListScreen extends React.Component {
                 <Text style={styles.listItemDesc}>{item.description}</Text>
               </View>
               <Button
-                onPress={() => this.textProducer(item.contact, item.title)}
+                onPress={() => this.textProducer(item.email, item.title)}
                 title="Contact Producer"
                 icon={{ name: 'ios-contact', type: "ionicon", size: 30, }}
                 backgroundColor={Colors.headerGreen}
