@@ -24,8 +24,9 @@ import { db, } from "../src/config/db";
 import Icon from "../components/Icon";
 import MyButton from "../components/Button";
 import ProduceModalScreen from "../screens/ProduceModalScreen";
-
-// let userId = firebase.auth().currentUser.uid;
+import GeoFire from 'geofire';
+const geoFire = new GeoFire(db.ref("/geoFire/"));
+const geoRef = geoFire.ref();
 
 class MyListScreen extends React.Component {
     state = {
@@ -50,19 +51,29 @@ class MyListScreen extends React.Component {
         });
     };
     handleHarvest = key => {
-        // first go get that item from the DB
-        db.ref("/currentFood/" + key).once("value")
-            .then(snapshot => {
-                let harvestedItem = snapshot.val();
-                // and add it to the harvested foods list ( ** need to separate out functions of simply remove and harvest)
-                console.log("harvested item: ", harvestedItem)
-                // add it to their harvestedFoods
-                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/harvestedFood/" + key).push(harvestedItem)
-                // remove from the current food list
-                db.ref("/currentFood/" + key).remove();
-                // remove it from their current food list
-                db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
-            });
+        Alert.alert("Hooray! Are you sure this item has been harvested?", "",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Harvest", onPress: () => {
+                        // first go get that item from the DB
+                        db.ref("/currentFood/" + key).once("value")
+                            .then(snapshot => {
+                                let harvestedItem = snapshot.val();
+                                // and add it to the harvested foods list ( ** need to separate out functions of simply remove and harvest)
+                                console.log("harvested item: ", harvestedItem)
+                                // add it to their harvestedFoods
+                                db.ref().child("/users/" + firebase.auth().currentUser.uid + "/harvestedFood/" + key).push(harvestedItem)
+                                // remove from the current food list
+                                db.ref("/currentFood/" + key).remove();
+                                // remove it from their current food list
+                                db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+                                // remove it from geoFire
+                                geoFire.remove(key);
+                            });
+                    }
+                }
+            ]);
     };
     handleDelete = key => {
         console.log(key)
@@ -80,6 +91,8 @@ class MyListScreen extends React.Component {
                                 db.ref("/currentFood/" + key).remove();
                                 // remove it from their current food list
                                 db.ref("/users/" + firebase.auth().currentUser.uid + "/currentFood/" + key).remove();
+                                // remove it from geoFire
+                                geoFire.remove(key);
                             });
                     }
                 }
@@ -127,7 +140,7 @@ class MyListScreen extends React.Component {
                                     data={this.state.myFoodsArray}
                                     renderItem={({ item }) =>
                                         <View style={{
-                                            flex:1,
+                                            flex: 1,
                                             flexDirection: "row",
                                             justifyContent: 'space-between',
                                             marginTop: 10,
@@ -136,11 +149,11 @@ class MyListScreen extends React.Component {
                                             // borderTopWidth: 1
                                         }}
                                         >
-                                            <View style={{flex:3}}> 
+                                            <View style={{ flex: 3 }}>
                                                 <Text style={styles.listItemTitle}>{item.name}</Text>
                                                 <Text style={styles.listItemDesc}>{item.description}</Text>
                                             </View>
-                                            <View style={{flex:2}}>
+                                            <View style={{ flex: 2 }}>
                                                 <Button
                                                     onPress={() => this.handleHarvest(item.key)}
                                                     title="harvest"

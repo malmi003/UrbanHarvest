@@ -10,9 +10,6 @@ const config = {
 };
 
 // initialize firebase - checks to make sure it hasn't already been initialized
-   firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 export const db = firebase.database();
-
-// export const userId = firebase.UserInfo.uid;
-// export const userId = firebase.auth().currentUser.uid;

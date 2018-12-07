@@ -21,9 +21,13 @@ import { db } from "../src/config/db";
 import { withNavigation } from "react-navigation";
 import MyButton from "../components/Button";
 import ReportScreen from "../screens/ReportScreen";
-const { Marker, Callout } = MapView;
+const { Marker, Callout, } = MapView;
 const { width, height } = Dimensions.get('window');
 
+import GeoFire from 'geofire';
+const geoFire = new GeoFire(db.ref("/geoFire/"));
+const geoRef = geoFire.ref();
+// set the geoQuery confines
 
 class MapScreen extends React.Component {
 
@@ -32,10 +36,11 @@ class MapScreen extends React.Component {
     this.state = {
       region: {
         latitude: 45.986656,
-        longitude: -96.258133,
+        longitude: -93.258133,
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       },
+      markerKeyArray: [],
       markerArray: [],
       modalVisible: false,
       contactId: "",
@@ -47,6 +52,7 @@ class MapScreen extends React.Component {
   // figure out the bounds of the screen (upper&lower lat& long)
   //map through the data to figure out if the given lat&lngs are within that range
   // pull all the pins from db, filter through them, create markers for each of those...
+
   pullFoods = () => {
     db.ref("currentFood").on("value", snapshot => {
       // grab the coords & hover data from each item in newFoods list
@@ -72,6 +78,30 @@ class MapScreen extends React.Component {
       this.setState({
         markerArray: markerArray,
       });
+    });
+  };
+  pullRelevantFoods = (key, array) => {
+    db.ref("currentFood/" + key).on("value", snapshot => {
+      // grab the coords & hover data from each item in newFoods list
+        let lat = parseFloat(snapshot.val().lat);
+        let lng = parseFloat(snapshot.val().lng);
+        let name = snapshot.val().name;
+        let description = snapshot.val().description;
+        let itemKey = snapshot.key;
+
+        // push each one into the marker array
+        array.push({
+          latlng: {
+            latitude: lat,
+            longitude: lng
+          },
+          title: name,
+          description: description,
+          key: itemKey,
+        })
+      });
+      this.setState({
+        markerArray: array,
     });
   };
   getAndSetCurrentLocation = () => {
@@ -101,13 +131,109 @@ class MapScreen extends React.Component {
     navigator.geolocation.getCurrentPosition(success, error, options);
   };
   componentWillMount = () => {
-    this.pullFoods();
+    console.log("mounting state: ", this.state.region)
     this.getAndSetCurrentLocation();
+    // this.pullFoods();
+    // this.onEnter();
+    // this.onExit();
   };
-  onRegionChange = region => {
+
+  geoQuery = () => geoFire.query({
+    center: [this.state.region.latitude, this.state.region.longitude],
+    // center: [45.986656, -93.258133],
+
+    radius: 5
+  });
+  onExit = () => {
+    let markerKeyArray = this.state.markerKeyArray;
+    // console.log("GONE: ", markerKeyArray)
+    this.geoQuery().on("key_exited", (key, location, distance) => {
+      console.log("GONE: ", markerKeyArray)
+      // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
+
+      if (markerKeyArray.indexOf(key) !== -1) {
+        markerKeyArray.splice(markerKeyArray.indexOf(key), 1);
+      };
+      this.setState({ markerKeyArray: markerKeyArray });
+
+    });
+  };
+  onEnter = () => {
+    let markerKeyArray = this.state.markerKeyArray;
+    this.geoQuery().on("key_entered", (key, location, distance) => {
+      // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
+
+      if (markerKeyArray.indexOf(key) === -1) {
+        markerKeyArray.push(key);
+      };
+      this.setState({ markerKeyArray: markerKeyArray });
+      console.log("MARKERS: ", markerKeyArray)
+    });
+  };
+
+  onRegionChangeComplete = region => {
     this.setState({ region });
-    console.log("Mapview State: ", this.state)
+    // this.geoQuery().updateCriteria({
+    //   center: [parseInt(this.state.region.latitude), parseInt(this.state.region.longitude)],
+    // });
+    // let markerKeyArray = this.state.markerKeyArray;
+    // console.log("region", region)
+
+    // this.geoQuery().on("key_exited", (key, location, distance) => {
+    //   console.log("GONE: ", markerKeyArray)
+    //   // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
+
+    //   if (markerKeyArray.indexOf(key) !== -1) {
+    //     markerKeyArray.splice(markerKeyArray.indexOf(key), 1);
+    //   };
+    //   this.setState({ markerKeyArray: markerKeyArray });
+
+    // });
+    // this.geoQuery().on("key_entered", (key, location, distance) => {
+    //   // console.log(key + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
+
+    //   if (markerKeyArray.indexOf(key) === -1) {
+    //     markerKeyArray.push(key);
+    //   };
+    //   this.setState({ markerKeyArray: markerKeyArray });
+    //   console.log("MARKERS: ", markerKeyArray)
+    // });
+    let markerArray = [];
+// so the issue here is it's being set to new coords centering on the map whenever the map moves which means keys go in but they never come out....
+// render straight away and each time map moves - call onmount and reset on change...
+// figure out how to set static initial center/radius and update based on when map moves then the keys should be able to come in and out....
+    geoFire.query({
+      center: [this.state.region.latitude, this.state.region.longitude],
+      radius: 4
+    }).on("key_entered", (key, location, distance) => {
+
+      console.log("key: ", key)
+      this.pullRelevantFoods(key, markerArray);
+
+      // if (markerKeyArray.indexOf(key) === -1) {
+      //   markerKeyArray.push(key);
+      // };
+      // this.setState({ markerKeyArray: markerKeyArray });
+      // console.log("MARKERS: ", markerKeyArray)
+    });
+
+    // geoFire.query({
+    //   center: [this.state.region.latitude, this.state.region.longitude],
+    //   radius: 5
+    // }).on("key_exited", (key, location, distance) => {
+    //   console.log("GONE: ", markerArray)
+    //   if (markerKeyArray.indexOf(key) !== -1) {
+    //     markerKeyArray.splice(markerArray.indexOf(key), 1);
+    //   };
+    //   this.setState({ markerKeyArray: markerArray });
+
+    // });
+
+
+    // this.onEnter()
+    // this.onExit();
   };
+
   setContactInformation = key => {
     db.ref("/currentFood/" + key).on("value", snapshot => {
       this.setState({
@@ -140,17 +266,23 @@ class MapScreen extends React.Component {
       console.log("no device detected");
     }
   };
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <MapView
+          // ref={(el) => (this.map = el)}
           style={{ flex: 1 }}
+          // initialRegion={this.getAndSetCurrentLocation()}
           region={this.state.region}
-          onRegionChange={this.onRegionChange}
+          onRegionChangeComplete={this.onRegionChangeComplete}
           showsUserLocation={true}
-          showsMyLocationButton={true}
+          // showsMyLocationButton={true}
           loadingEnabled={true}
+          provider={MapView.PROVIDER_GOOGLE}
           // reset the marker state on deselect
           onMarkerDeselect={() => {
             this.setState({
@@ -183,7 +315,7 @@ class MapScreen extends React.Component {
             <ReportScreen
               contactKey={this.state.contactId}
             />
-
+            {console.log("geofire marker array: ", this.state.markerKeyArray)}
             <MyButton
               onPress={() => this.pullFoods()}
               iconName={"refresh"}
