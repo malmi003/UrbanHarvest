@@ -40,9 +40,11 @@ class GenericReportScreen extends React.Component {
             reportMessage: "",
         };
     };
-
+    componentDidMount = () => {
+        this.sendReport();
+    }
     sendReport = () => {
-        this.setModalVisible(false)
+        this.props.navigation.goBack()
         MailComposer.composeAsync({
             recipients: ["info@urbanharvest.com"],
             subject: this.state.reportPost,
@@ -57,8 +59,9 @@ class GenericReportScreen extends React.Component {
             <View style={styles.container}>
                 <ScrollView>
                     <KeyboardAvoidingView behavior="padding" enabled>
-                        <View style={{ flex: 1, }}>
-                            <View style={styles.headerContainer}>
+                    {/* Removed report screen for simplicity, can add back in when get real contact information */}
+                        {/* <View style={{ flex: 1, }}> */}
+                            {/* <View style={styles.headerContainer}>
                                 <MyIcon
                                     name={
                                         Platform.OS === 'ios'
@@ -69,9 +72,9 @@ class GenericReportScreen extends React.Component {
                                     size={50}
                                     style={{ paddingLeft: 20 }}
                                 />
-                                <Text style={[Styles.title]}>Report</Text>
+                                <Text style={[Styles.title]}>Report</Text> */}
                                 {/* dummy component to center header elements correctly */}
-                                <Text style={{ paddingRight: 30 }}></Text>
+                                {/* <Text style={{ paddingRight: 30 }}></Text>
                             </View>
                             <View style={styles.reportContainer}>
                                 <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", paddingTop: 10, paddingBottom: 10, color: Colors.darkGray }}>Subject</Text>
@@ -101,7 +104,7 @@ class GenericReportScreen extends React.Component {
                                     containerViewStyle={{ paddingBottom: 10, }}
                                 />
                             </View>
-                        </View>
+                        </View> */}
                     </KeyboardAvoidingView>
                 </ScrollView>
             </View>

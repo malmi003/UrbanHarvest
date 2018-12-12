@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Platform, Text, ScrollView, View, Alert, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import MapScreen from "../screens/MapScreen";
-import ListScreen from '../screens/ListScreen';
+// ** ADD BACK IN ONCE ADD LIST VIEW
+// import ListScreen from '../screens/ListScreen';
 import UserSettingsScreen from "../screens/mainMenu/userSettings";
 import * as firebase from 'firebase';
 import ProduceModalScreen from "../screens/ProduceModalScreen";
@@ -17,7 +18,7 @@ class LogoTitle extends React.Component {
     return (
       <Image
         source={require('../assets/images/urbanHarvestLogo.png')}
-        style={{ width: 250, height: 50 }}
+        style={{ width: this.props.width ? this.props.width : 250, height: this.props.height ? this.props.height :50}}
       />
     );
   }
@@ -85,32 +86,36 @@ const headerToggleStack = createStackNavigator(
   {
     Map: {
       screen: () => <MapScreen />,
-      navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          <HeaderViewToggleBtn
-            style1={styles.inactiveCenterHeaderButton}
-            style2={styles.activeCenterHeaderButton}
-            nav1={() => navigation.navigate("Map")}
-            nav2={() => navigation.navigate("List")}
-          />,
-      })
+      // ** ADD TOGGLE BTN BACK IN FOR SWITCHING BETWEEN MAP AND LIST VIEW
+      // navigationOptions: ({ navigation }) => ({
+      //   headerTitle:
+      // <HeaderViewToggleBtn
+      //   style1={styles.inactiveCenterHeaderButton}
+      //   style2={styles.activeCenterHeaderButton}
+      //   nav1={() => navigation.navigate("Map")}
+      //   nav2={() => navigation.navigate("List")}
+      // />,
+      // })
     },
-    List: {
-      screen: () => <ListScreen />,
-      navigationOptions: ({ navigation }) => ({
-        headerTitle:
-          <HeaderViewToggleBtn
-            style1={styles.activeCenterHeaderButton}
-            style2={styles.inactiveCenterHeaderButton}
-            nav1={() => navigation.navigate("Map")}
-            nav2={() => navigation.navigate("List")}
-          />,
-      }),
-    },
+    // List view not fully functional, leaving for v2
+    // List: {
+    //   screen: () => <ListScreen />,
+    //   navigationOptions: ({ navigation }) => ({
+    //     headerTitle:
+    //       <HeaderViewToggleBtn
+    //         style1={styles.activeCenterHeaderButton}
+    //         style2={styles.inactiveCenterHeaderButton}
+    //         nav1={() => navigation.navigate("Map")}
+    //         nav2={() => navigation.navigate("List")}
+    //       />,
+    //   }),
+    // },
   },
   {
     initialRouteName: 'Map',
     navigationOptions: ({ navigation }) => ({
+      // ** REMOVE headerTitle BELOW WHEN ADD LIST VIEW BACK IN
+      headerTitle: <LogoTitle width={150} height={35}/>,
       headerStyle: {
         backgroundColor: Colors.headerGreen,
         marginBottom: 0,
@@ -128,13 +133,13 @@ const headerToggleStack = createStackNavigator(
 );
 export default LeftDrawerNavigator = createDrawerNavigator(
   {
-    "Find Food": { screen: headerToggleStack },
+    " ": { screen: headerToggleStack },
     "Settings": { screen: UserSettingsScreen },
     "Contact Customer Service": { screen: GenericReportScreen },
   },
   {
     drawerPosition: "left",
-    initialRouteName: "Find Food",
+    initialRouteName: " ",
     drawerBackgroundColor: Colors.headerGreen,
     drawerWidth: 300,
     contentComponent: CustomDrawerContentComponent,

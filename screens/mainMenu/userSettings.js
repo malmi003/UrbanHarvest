@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         alignSelf: "stretch",
         fontSize: 18,
         marginTop: 40,
-        marginBottom: 40,
+        marginBottom: 20,
     },
     darkTextInput: {
         borderWidth: 1,
@@ -155,11 +155,7 @@ const styles = StyleSheet.create({
     bottomButton: {
         marginLeft: 0,
         marginRight: 0,
-        marginTop: 40,
-        //     position: "absolute",
-        //     bottom: 0,
-        //     left: 0,
-        //     right: 0,
+        marginTop: 20,
     },
 });
 

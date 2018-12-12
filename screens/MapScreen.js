@@ -27,6 +27,12 @@ import GeoFire from 'geofire';
 const geoFire = new GeoFire(db.ref("/geoFire/"));
 
 class MapScreen extends React.Component {
+  static navigationOptions = {
+    drawerIcon: ({ tintColor }) => (
+      <MyIcon name="ios-mail" color={tintColor} />
+    )
+  };
+
 
   constructor(props) {
     super(props);
@@ -74,7 +80,7 @@ class MapScreen extends React.Component {
   };
   getAndSetCurrentLocation = () => {
     const options = {
-      enableHighAccuracy: true,
+      enableHighAccuracy: false,
       timeout: 3000,
       maximumAge: 0
     };
@@ -126,17 +132,18 @@ class MapScreen extends React.Component {
         console.log(status)
       })
   };
-  textProducer = (number, foodName) => {
-    const isAvailable = SMS.isAvailableAsync();
-    if (isAvailable) {
-      // do your SMS stuff here
-      SMS.sendSMSAsync(number, "Hello, I am interested in the " + foodName + " you listed on Urban Harvest. Where and when can I safely pick it up? Thank you!")
-    } else {
-      // misfortune... there's no SMS available on this device
-      Alert.alert("Unable to contact Producer without SMS available");
-      console.log("no device detected");
-    }
-  };
+  // Currently this functionality is not being used
+  // textProducer = (number, foodName) => {
+  //   const isAvailable = SMS.isAvailableAsync();
+  //   if (isAvailable) {
+  //     // do your SMS stuff here
+  //     SMS.sendSMSAsync(number, "Hello, I am interested in the " + foodName + " you listed on Urban Harvest. Where and when can I safely pick it up? Thank you!")
+  //   } else {
+  //     // misfortune... there's no SMS available on this device
+  //     Alert.alert("Unable to contact Producer without SMS available");
+  //     console.log("no device detected");
+  //   }
+  // };
 
   sendReport = (contactKey) => {
     MailComposer.composeAsync({
@@ -187,15 +194,15 @@ class MapScreen extends React.Component {
                   textStyle={styles.buttonText}
                   title={" Contact Producer"}
                 />
-                  <MyButton
-                        onPress={() => this.sendReport(marker.key)}
-                        title="Report"
-                        iconName={"alert"}
-                        iconSize={30}
-                        iconStyle={styles.leftMapIcon}
-                        iconColor={Colors.headerGreen}
-                        buttonStyle={{flexDirection:"row", justifyContent: "center", alignItems:"center", marginTop:20}}
-                    />
+                <MyButton
+                  onPress={() => this.sendReport(marker.key)}
+                  title="Report"
+                  iconName={"alert"}
+                  iconSize={30}
+                  iconStyle={styles.leftMapIcon}
+                  iconColor={Colors.headerGreen}
+                  buttonStyle={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginTop: 20 }}
+                />
               </Callout>
             </Marker>
           ))}
@@ -204,7 +211,7 @@ class MapScreen extends React.Component {
           {/* <View style={{ flexDirection: "row", justifyContent: "space-around" }}> */}
 
           <MyButton
-            onPress={() => this.pullFoods()}
+            onPress={() => this.callGeoFire()}
             iconName={"refresh"}
             iconSize={30}
             iconStyle={styles.leftMapIcon}
@@ -247,7 +254,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   producerButtonActive: {
-    marginTop:8,
+    marginTop: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
