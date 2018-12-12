@@ -22,7 +22,6 @@ import { withNavigation } from "react-navigation";
 import MyButton from "../components/Button";
 import ReportScreen from "../screens/ReportScreen";
 const { Marker, Callout, } = MapView;
-
 import GeoFire from 'geofire';
 const geoFire = new GeoFire(db.ref("/geoFire/"));
 
@@ -33,22 +32,17 @@ class MapScreen extends React.Component {
     )
   };
 
-
   constructor(props) {
     super(props);
     this.state = {
       region: {
-        latitude: 45.986656,
-        longitude: -93.258133,
+        latitude: 44.998,
+        longitude: -93.263,
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       },
       markerArray: [],
       modalVisible: false,
-      // contactId: "",
-      // contactInfo: "",
-      // contactFoodName: "",
-      // contactDisabled: true,
     };
   };
   callGeoFire = () => {
@@ -57,10 +51,10 @@ class MapScreen extends React.Component {
       center: [this.state.region.latitude, this.state.region.longitude],
       radius: 4
     }).on("key_entered", (key, location, distance) => {
-      // then it will run pull relevant foods for each one (this gets run each tsime a matching key is found in DB)
+      // then it will run pull relevant foods for each one (this gets run each time a matching key is found in DB)
       db.ref("currentFood/" + key).on("value", snapshot => {
         // grab the coords & hover data from each item in newFoods list and push each one into the marker array
-        console.log("snapshot", snapshot)
+        // console.log("geo snapshot", snapshot)
         markerArray.push({
           latlng: {
             latitude: parseFloat(snapshot.val().lat),
@@ -71,10 +65,10 @@ class MapScreen extends React.Component {
           key: snapshot.key,
           contactInfo: snapshot.val().contact,
         })
-      });
-      this.setState({
-        markerArray: markerArray,
-      });
+        this.setState({
+          markerArray: markerArray,
+        });
+      })
     });
     markerArray = [];
   };
@@ -86,10 +80,6 @@ class MapScreen extends React.Component {
     };
     const success = pos => {
       const crd = pos.coords;
-      console.log('Your current position is:');
-      console.log(`Latitude : ${crd.latitude}`);
-      console.log(`Longitude: ${crd.longitude}`);
-      console.log(`More or less ${crd.accuracy} meters.`);
 
       this.setState({
         region: {
@@ -99,19 +89,28 @@ class MapScreen extends React.Component {
           longitudeDelta: 0.02,
         },
       });
+      // console.log("region", this.state.region)
+      this.callGeoFire();
+      // setTimeout(this.callGeoFire, 5000);
     };
     const error = err => { if (err) console.log(err) };
     // pull current location from Google - asks user permission
     navigator.geolocation.getCurrentPosition(success, error, options);
   };
-  componentWillMount = () => {
-    this.getAndSetCurrentLocation();
-
-  };
   componentDidMount = () => {
-    // below will create a geoFire query to pull all the keys in the given region
-    this.callGeoFire();
+    //   // below will create a geoFire query to pull all the keys in the given region
+    //   setTimeout(this.callGeoFire, 10000)
+    this.getAndSetCurrentLocation();
+    // this.callGeoFire();
+
+    // this.forceUpdate();
   };
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.region !== prevState.region) {
+  //     this.callGeoFire();
+  //     console.log("running")
+  //   }
+  // }
 
   //only updating region after the map scroll has been complete to avoid "glitchy" map 
   onRegionChangeComplete = region => {
@@ -126,7 +125,7 @@ class MapScreen extends React.Component {
     MailComposer.composeAsync({
       recipients: [address],
       subject: "Urban Harvest: " + [foodName],
-      body: `Hello, \n\n I am interested the ${foodName} you posted on Urban Harvest. Where and when can I safely pick it up? \n\n Thank you!`
+      body: `Hello, \n\n I am interested in the ${foodName} you posted on Urban Harvest. Where and when can I safely pick it up? \n\n Thank you!`
     })
       .then(status => {
         console.log(status)
@@ -170,6 +169,8 @@ class MapScreen extends React.Component {
           showsUserLocation={true}
           showsMyLocationButton={true}
           loadingEnabled={true}
+          loadingIndicatorColor={Colors.headerGreen}
+        // onMapReady={console.log("map is ready")}
         // provider={MapView.PROVIDER_GOOGLE}
         >
           {/* {console.log(this.state.markerArray)} */}
