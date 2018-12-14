@@ -24,6 +24,7 @@
     "react-native-elements": "^0.19.1",
     "react-navigation": "^2.18.2",
     "react-select": "^2.1.1",
+    "rn-fetch-blob": "^0.10.14",
     "rsvp": "^4.8.4",
     "yup": "^0.26.6"
   },

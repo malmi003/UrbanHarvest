@@ -1,5 +1,5 @@
 // ** need to add loading screen before finishes logging in
-
+//  ** use a different color marker for your own foods (if userID matches current user kind of thing)
 import React from 'react';
 import {
   Image,
@@ -54,20 +54,23 @@ class MapScreen extends React.Component {
       // then it will run pull relevant foods for each one (this gets run each time a matching key is found in DB)
       db.ref("currentFood/" + key).on("value", snapshot => {
         // grab the coords & hover data from each item in newFoods list and push each one into the marker array
-        // console.log("geo snapshot", snapshot)
-        markerArray.push({
-          latlng: {
-            latitude: parseFloat(snapshot.val().lat),
-            longitude: parseFloat(snapshot.val().lng)
-          },
-          title: snapshot.val().name,
-          description: snapshot.val().description,
-          key: snapshot.key,
-          contactInfo: snapshot.val().contact,
-        })
-        this.setState({
-          markerArray: markerArray,
-        });
+        console.log("geo snapshot", snapshot)
+        // if (snapshot.hasOwnProperty("lat")) {
+          if (snapshot !== null) {
+          markerArray.push({
+            latlng: {
+              latitude: parseFloat(snapshot.val().lat),
+              longitude: parseFloat(snapshot.val().lng)
+            },
+            title: snapshot.val().name,
+            description: snapshot.val().description,
+            key: snapshot.key,
+            contactInfo: snapshot.val().email,
+          })
+          this.setState({
+            markerArray: markerArray,
+          });
+        };
       })
     });
     markerArray = [];

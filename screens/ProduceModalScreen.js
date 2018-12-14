@@ -9,7 +9,7 @@ import {
   View,
   Modal,
   KeyboardAvoidingView,
-
+  Image
 } from 'react-native';
 import { withNavigation } from "react-navigation";
 import Colors from "../constants/Colors";
@@ -21,30 +21,80 @@ import { addFood } from "../src/services/addFood";
 import * as firebase from "firebase";
 import { GOOGLE_API_KEY } from 'react-native-dotenv';
 import Styles from "../constants/Styles";
-// import { db } from '../config/db';
-// import GeoFire from 'geofire';
-// const geoFire = new GeoFire(db.ref("/geoFire/").push());
-// const geoRef = geoFire.ref();
+import { ImagePicker, Permissions } from "expo";
+
+// SETTING UP FIREBASE STORAGE
+// Get a reference to the storage service, which is used to create references in your storage bucket // Create a storage reference from our storage service
+const storageRef = firebase.storage().ref();
+// Create a child reference
+const imagesRef = storageRef.child('images');
+// imagesRef now points to 'images'
+
 
 class ProduceModalScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
+      image: null,
     };
   };
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
+  pickFromCameraRoll = async () => {
+    const rollPermissions = Permissions.CAMERA_ROLL;
+    const { rollStatus } = await Permissions.askAsync(rollPermissions);
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+  picFromCamera = async () => {
+    // ** need to actually do something with these permissions
+    const cameraPermissions = Permissions.CAMERA;
+    const { cameraStatus } = await Permissions.askAsync(cameraPermissions);
+
+    // if (cameraStatus === "granted") {
+    let result = await ImagePicker.launchCameraAsync({
+      // mediaTypes: "Images",
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+    // } else console.log("permission not granted")
+  };
+  // LEFT OFF HERE
+  addImageToFBStorage = () => {
+    let file = this.state.image;
+    imagesRef.putString(file, "base64url").then(function(snapshot) {
+      console.log('Uploaded a blob or file!', snapshot);
+    });
+  };
   // ** add validation data so can't submit non-address
   // ** change this to change message in submit button then close after a second or two
   handleSubmit = values => {
+    if (this.state.image) {
+      this.addImageToFBStorage();
+    }
     // need to call google api to get coords of addresses then convert to latlng
     return fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.address},${values.city},${values.state}${values.zip}&key=${GOOGLE_API_KEY}`)
 
       .then(response => {
-        console.log(response)
+        // console.log(response)
         let parsedRes = JSON.parse(response["_bodyInit"]);
         let lat = parsedRes.results[0].geometry.location.lat.toFixed(3) + (Math.random() * (1001 - 0));
         let lng = parsedRes.results[0].geometry.location.lng.toFixed(3) + (Math.random() * (1001 - 0));
@@ -58,12 +108,7 @@ class ProduceModalScreen extends React.Component {
           description: values.description,
           category: values.category,
           email: values.email,
-          // needs to be object w/ location.latitude
-          // region2: Expo.Location.reverseGeocodeAsync(values.lat, values.lng),
         };
-        console.log(addFoodPacket.region)
-
-        // console.log(addFoodPacket.region, addFoodPacket.region2)
         addFood(addFoodPacket);
         this.setModalVisible(false);
       })
@@ -73,6 +118,8 @@ class ProduceModalScreen extends React.Component {
   };
 
   render() {
+    let { image } = this.state;
+
     return (
       <View style={styles.container}>
         <Modal
@@ -113,6 +160,18 @@ class ProduceModalScreen extends React.Component {
                       autoFocus={true}
                       blurOnSubmit={false}
                     />
+                    <Button
+                      title="Pick from Camera"
+                      onPress={this.picFromCamera}
+                      style={{ marginTop: 25 }}
+                    />
+                    <Button
+                      title="Pick from CameraRoll"
+                      onPress={this.pickFromCameraRoll}
+                      style={{ marginTop: 10 }}
+                    />
+                    {image &&
+                      <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: "center", marginTop: 10 }} />}
                     <Input
                       label="Description"
                       labelStyle={{ color: Colors.darkGray }}

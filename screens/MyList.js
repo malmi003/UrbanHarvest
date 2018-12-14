@@ -51,7 +51,7 @@ class MyListScreen extends React.Component {
         });
     };
     handleHarvest = key => {
-        Alert.alert("Hooray! Are you sure this item has been harvested?", "",
+        Alert.alert("Hooray! Confirm this item has been harvested.", "",
             [
                 { text: "Cancel", style: "cancel" },
                 {
@@ -143,7 +143,7 @@ class MyListScreen extends React.Component {
                             <ProduceModalScreen />
                             {/* if statement that either displays your foods from the DB or "none" message */}
                             {!this.state.myFoodsArray.length
-                                ? <Text style={[styles.listItemTitle, { margin: 10, marginBottom: 30, marginTop: 25 }]}>You don't have any foods to display at this time. Click "Add New Food" to start adding to the map.</Text>
+                                ? <Text style={[styles.listItemTitle, { margin: 10, marginBottom: 30, marginTop: 25 }]}>No foods to display at this time. Click "Add New Food" to start adding to the map.</Text>
                                 : <FlatList
                                     data={this.state.myFoodsArray}
                                     renderItem={({ item }) =>

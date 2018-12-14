@@ -6,7 +6,7 @@ const config = {
    authDomain: "urbanharvest-76a09.firebaseapp.com",
    databaseURL: "https://urbanharvest-76a09.firebaseio.com/",
    projectId: "urbanharvest-76a09",
-   storageBucket: "urbanharvest-76a09.appspot.com",
+   storageBucket: "gs://urbanharvest-76a09.appspot.com/",
 };
 
 // initialize firebase - checks to make sure it hasn't already been initialized
